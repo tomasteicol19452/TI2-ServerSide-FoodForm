@@ -9,6 +9,11 @@ namespace FoodForm.Models
 {
     public class Receitas
     {
+        public Receitas()
+        {
+            ListaDeComentarios = new HashSet<Comentarios>();
+        }
+
         [Key]
         public int ID { get; set; }
 
@@ -22,5 +27,7 @@ namespace FoodForm.Models
         [ForeignKey(nameof(Utilizador))]
         public int UtilizadorFK { get; set; }
         public Utilizadores Utilizador { get; set; }
+
+        public ICollection<Comentarios> ListaDeComentarios { get; set; }
     }
 }
