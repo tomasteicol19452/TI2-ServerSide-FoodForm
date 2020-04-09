@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 
 namespace FoodForm.Models
 {
-    public class Receitas
+    public class Gostos
     {
         [Key]
         public int ID { get; set; }
 
-        public string Titulo { get; set; }
+        public Boolean Gosto { get; set; }
 
-        public string Descricao { get; set; }
-
-        public string Imagem { get; set; }
-
-        //FK para o criador desta receita
         [ForeignKey(nameof(Utilizador))]
         public int UtilizadorFK { get; set; }
         public Utilizadores Utilizador { get; set; }
+
+        [ForeignKey(nameof(Receita))]
+        public int ReceitaFK { get; set; }
+        public Receitas Receita{ get; set; }
     }
 }
