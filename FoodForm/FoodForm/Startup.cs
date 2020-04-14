@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FoodForm.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +26,13 @@ namespace FoodForm
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //****************************************************************************
+            // especificação do 'tipo' e 'localização' da BD
+            services.AddDbContext<FoodFormDB>(options =>
+               options.UseSqlServer(
+                   Configuration.GetConnectionString("ConnectionDB")));//<- connection string é o que vai referenciar a base de dados que nos vamos necessitar
+            //****************************************************************************
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
