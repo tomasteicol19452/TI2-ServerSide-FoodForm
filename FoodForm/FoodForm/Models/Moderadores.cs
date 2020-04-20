@@ -11,8 +11,8 @@ namespace FoodForm.Models
         [Key]
         public int ID { get; set; }
 
-        public int Email { get; set; }
+        public string Email { get; set; }
 
-        public int Password { get; set; }
+        public string Password { get; set; }
     }
 }

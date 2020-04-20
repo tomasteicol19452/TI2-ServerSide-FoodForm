@@ -13,11 +13,11 @@ namespace FoodForm.Data
     public class FoodFormDB : DbContext
     {
         /// <summary>
-        /// construtor da classe que serve tambem para ligar a classe á bas de dados
+        /// construtor da classe que serve tambem para ligar a classe à base de dados
         /// </summary>
         /// <param name="options"></param>
         public FoodFormDB(DbContextOptions<FoodFormDB> options) : base(options) { }
-        //adicionar as tables á base de dados
+        //adicionar as tables à base de dados
         public DbSet<Utilizadores> Utilizadores { get; set; }
         public DbSet<Receitas> Receitas { get; set; }
         public DbSet<Comentarios> Comentarios { get; set; }
