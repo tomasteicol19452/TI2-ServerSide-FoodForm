@@ -23,9 +23,17 @@ namespace FoodForm.Models
 
         public string Imagem { get; set; }
 
+        public string Dificuldade { get; set; }
+
+        public int Tempo { get; set; }
+
+        public int PessoasServidas { get; set; }
+
+        public string Ingredientes { get; set; }
+
         //FK para o criador desta receita
         [ForeignKey(nameof(Utilizador))]
-        public int UtilizadorFK { get; set; }
+        public int Autor { get; set; }
         public Utilizadores Utilizador { get; set; }
 
         public ICollection<Comentarios> ListaDeComentarios { get; set; }

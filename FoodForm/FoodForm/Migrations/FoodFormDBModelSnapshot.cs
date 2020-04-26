@@ -107,11 +107,11 @@ namespace FoodForm.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Email")
-                        .HasColumnType("int");
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Password")
-                        .HasColumnType("int");
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -125,21 +125,38 @@ namespace FoodForm.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Autor")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Dificuldade")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Ingredientes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PessoasServidas")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tempo")
+                        .HasColumnType("int");
+
                     b.Property<string>("Titulo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UtilizadorFK")
+                    b.Property<int?>("UtilizadoresID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UtilizadorFK");
+                    b.HasIndex("Autor");
+
+                    b.HasIndex("UtilizadoresID");
 
                     b.ToTable("Receitas");
                 });
@@ -159,9 +176,6 @@ namespace FoodForm.Migrations
 
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Password")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -216,10 +230,14 @@ namespace FoodForm.Migrations
             modelBuilder.Entity("FoodForm.Models.Receitas", b =>
                 {
                     b.HasOne("FoodForm.Models.Utilizadores", "Utilizador")
-                        .WithMany("ListaDeReceitas")
-                        .HasForeignKey("UtilizadorFK")
+                        .WithMany("MinhasReceitas")
+                        .HasForeignKey("Autor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("FoodForm.Models.Utilizadores", null)
+                        .WithMany("ReceitasGostadas")
+                        .HasForeignKey("UtilizadoresID");
                 });
 #pragma warning restore 612, 618
         }

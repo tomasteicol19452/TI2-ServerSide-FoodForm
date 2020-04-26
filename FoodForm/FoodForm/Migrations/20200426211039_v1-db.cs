@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodForm.Migrations
 {
-    public partial class inicial : Migration
+    public partial class v1db : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,8 @@ namespace FoodForm.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false)
+                    Email = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,7 +29,6 @@ namespace FoodForm.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: false),
                     Imagem = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -46,14 +45,25 @@ namespace FoodForm.Migrations
                     Titulo = table.Column<string>(nullable: true),
                     Descricao = table.Column<string>(nullable: true),
                     Imagem = table.Column<string>(nullable: true),
-                    UtilizadorFK = table.Column<int>(nullable: false)
+                    Dificuldade = table.Column<string>(nullable: true),
+                    Tempo = table.Column<int>(nullable: false),
+                    PessoasServidas = table.Column<int>(nullable: false),
+                    Ingredientes = table.Column<string>(nullable: true),
+                    Autor = table.Column<int>(nullable: false),
+                    UtilizadoresID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Receitas", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Receitas_Utilizadores_UtilizadorFK",
-                        column: x => x.UtilizadorFK,
+                        name: "FK_Receitas_Utilizadores_Autor",
+                        column: x => x.Autor,
+                        principalTable: "Utilizadores",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Receitas_Utilizadores_UtilizadoresID",
+                        column: x => x.UtilizadoresID,
                         principalTable: "Utilizadores",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
@@ -173,9 +183,14 @@ namespace FoodForm.Migrations
                 column: "UtilizadorFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Receitas_UtilizadorFK",
+                name: "IX_Receitas_Autor",
                 table: "Receitas",
-                column: "UtilizadorFK");
+                column: "Autor");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receitas_UtilizadoresID",
+                table: "Receitas",
+                column: "UtilizadoresID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
