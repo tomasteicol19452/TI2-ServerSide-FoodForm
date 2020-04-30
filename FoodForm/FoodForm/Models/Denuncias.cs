@@ -14,6 +14,8 @@ namespace FoodForm.Models
 
         public DateTime Data { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
+        [RegularExpression("[A-ZÓÂÍ][a-zçáéíóúàèìòùãõäëïöüâêîôûñ]+")]
         public string Conteudo { get; set; }
 
         [ForeignKey(nameof(Utilizador))]

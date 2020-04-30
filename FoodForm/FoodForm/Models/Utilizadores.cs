@@ -18,11 +18,13 @@ namespace FoodForm.Models
         [Key]
         public int ID { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
+        [StringLength(40, ErrorMessage ="O {0} não pode exceder os {1} caracteres.")]
+        [RegularExpression("[A-ZÓÂÍ][a-zçáéíóúàèìòùãõäëïöüâêîôûñ]+(( | d[ao](s)? | e |-|'| d')[A-ZÓÂÍ][a-zçáéíóúàèìòùãõäëïöüâêîôûñ]+){1,3}")]
         public string Nome { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do Email obrigatório.")]
         public string Email { get; set; }
-
-        //public string Password { get; set; }
 
         public string Imagem { get; set; }
 

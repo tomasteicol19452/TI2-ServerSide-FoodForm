@@ -17,16 +17,21 @@ namespace FoodForm.Models
         [Key]
         public int ID { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
         public string Titulo { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
         public string Descricao { get; set; }
 
         public string Imagem { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
         public string Dificuldade { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
         public int Tempo { get; set; }
 
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
         public int PessoasServidas { get; set; }
 
         public string Ingredientes { get; set; }
