@@ -14,8 +14,11 @@ namespace FoodForm.Models
 
         public DateTime Data { get; set; }
 
+        /// <summary>
+        /// Denuncia da receita em questão no caso de ser imprópria. O moderador depois de rever a deuncia, elimina a denuncia e/ou apaga a receita.
+        /// </summary>
         [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
-        [RegularExpression("[A-ZÓÂÍ][a-zçáéíóúàèìòùãõäëïöüâêîôûñ]+")]
+        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ]+")]
         public string Conteudo { get; set; }
 
         [ForeignKey(nameof(Utilizador))]

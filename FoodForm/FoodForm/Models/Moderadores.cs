@@ -11,8 +11,9 @@ namespace FoodForm.Models
         [Key]
         public int ID { get; set; }
 
+        /// <summary>
+        /// Email referente a esta conta de moderador
+        /// </summary>
         public string Email { get; set; }
-
-        public string Password { get; set; }
     }
 }

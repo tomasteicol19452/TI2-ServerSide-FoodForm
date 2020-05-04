@@ -4,14 +4,16 @@ using FoodForm.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodForm.Migrations
 {
     [DbContext(typeof(FoodFormDB))]
-    partial class FoodFormDBModelSnapshot : ModelSnapshot
+    [Migration("20200504190630_Sv1_REv1_Modv2")]
+    partial class Sv1_REv1_Modv2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -271,13 +273,13 @@ namespace FoodForm.Migrations
                     b.HasOne("FoodForm.Models.Receitas", "Receita")
                         .WithMany("ListaDeComentarios")
                         .HasForeignKey("ReceitaFK")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FoodForm.Models.Utilizadores", "Utilizador")
                         .WithMany()
                         .HasForeignKey("UtilizadorFK")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -286,13 +288,13 @@ namespace FoodForm.Migrations
                     b.HasOne("FoodForm.Models.Receitas", "Receita")
                         .WithMany()
                         .HasForeignKey("ReceitaFK")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FoodForm.Models.Utilizadores", "Utilizador")
                         .WithMany()
                         .HasForeignKey("UtilizadorFK")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -301,13 +303,13 @@ namespace FoodForm.Migrations
                     b.HasOne("FoodForm.Models.Receitas", "Receita")
                         .WithMany()
                         .HasForeignKey("ReceitaFK")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FoodForm.Models.Utilizadores", "Utilizador")
                         .WithMany()
                         .HasForeignKey("UtilizadorFK")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -316,7 +318,7 @@ namespace FoodForm.Migrations
                     b.HasOne("FoodForm.Models.Utilizadores", "Utilizador")
                         .WithMany("MinhasReceitas")
                         .HasForeignKey("Autor")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FoodForm.Models.Utilizadores", null)

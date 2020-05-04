@@ -54,7 +54,7 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Email,Password")] Moderadores moderadores)
+        public async Task<IActionResult> Create([Bind("ID,Email")] Moderadores moderadores)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Email,Password")] Moderadores moderadores)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Email")] Moderadores moderadores)
         {
             if (id != moderadores.ID)
             {
