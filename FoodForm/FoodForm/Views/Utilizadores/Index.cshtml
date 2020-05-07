@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Imagem)
+                <img src="~/img/utilizadores/@item.Imagem" height="80" alt="@item.Nome" title="@item.Nome" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

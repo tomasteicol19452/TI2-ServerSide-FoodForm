@@ -18,16 +18,19 @@ namespace FoodForm.Data
         /// <param name="options"></param>
         public FoodFormDB(DbContextOptions<FoodFormDB> options) : base(options) { }
 
+        /// <summary>
+        /// Inserção da seed na base de dados
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // insert DB seed
             modelBuilder.Entity<Utilizadores>().HasData(
                new Utilizadores { ID = 1, Nome = "Zé", Email = "ze@mail.com", Imagem = "ze.jpg" },
                new Utilizadores { ID = 2, Nome = "Tó", Email = "to@mail.com", Imagem = "to.jpg" },
                new Utilizadores { ID = 3, Nome = "Ruca", Email = "ruca@mail.com", Imagem = "ruca.jpg" },
                new Utilizadores { ID = 4, Nome = "João", Email = "joao@mail.com", Imagem = "joao.jpg" },
                new Utilizadores { ID = 5, Nome = "Rick", Email = "rick@mail.com", Imagem = "rick.jpg" },
-               new Utilizadores { ID = 6, Nome = "Morty", Email = "morty@mail.com", Imagem = "morty.jpg" }
+               new Utilizadores { ID = 6, Nome = "Morty", Email = "morty@mail.com", Imagem = "morty.png" }
                 );
 
             modelBuilder.Entity<Moderadores>().HasData(
@@ -62,7 +65,9 @@ namespace FoodForm.Data
                 );
         }
 
-        //adicionar as tables à base de dados
+        /// <summary>
+        /// Modelos das tabelas a serem adicionados a base de dados
+        /// </summary>
         public DbSet<Utilizadores> Utilizadores { get; set; }
         public DbSet<Receitas> Receitas { get; set; }
         public DbSet<Comentarios> Comentarios { get; set; }

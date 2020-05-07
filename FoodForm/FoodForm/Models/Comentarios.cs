@@ -12,9 +12,16 @@ namespace FoodForm.Models
         [Key]
         public int ID { get; set; }
 
+        /// <summary>
+        /// Data em que o comentário é escrito e submetido
+        /// </summary>
         public DateTime Data { get; set; }
 
+        /// <summary>
+        /// Conteudo do comentário
+        /// </summary>
         [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
+        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ]+")]
         public string Conteudo { get; set; }
 
         [ForeignKey(nameof(Utilizador))]
