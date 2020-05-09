@@ -53,7 +53,7 @@ namespace FoodForm.Data
                new Receitas
                {
                    ID = 2,
-                   Titulo = "Pão com manteiga.",
+                   Titulo = "Pão com manteiga",
                    Descricao = "O clássico lanche. Uma bola ou papo-seco e manteiga. Simples!",
                    Ingredientes = "Pão; Manteiga;",
                    Tempo = 1,

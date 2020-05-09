@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace FoodForm.Controllers
 {
@@ -43,9 +44,19 @@ namespace FoodForm.Controllers
                 return RedirectToAction("Index");
             }
 
+            /*
+             Em SQL
+             SELECT *
+             FROM utilizadores u, receitas r, gostos g
+             WHERE u.ID = id 
+             AND r.Autor = u.ID
+             AND g.UtilizadorFK = u.ID
+             */
             
             var utilizadores = await _context.Utilizadores
-                .FirstOrDefaultAsync(m => m.ID == id); //em sql -> SELECT * FROM utlilizadoes m onde m.id = id
+                .Include(r => r.MinhasReceitas)
+                //.Include(g => g.ReceitasGostadas)
+                .FirstOrDefaultAsync(u => u.ID == id);
             if (utilizadores == null)
             {
                 return NotFound();
@@ -65,8 +76,11 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Nome,Email,Imagem")] Utilizadores utilizadores)
+        public async Task<IActionResult> Create([Bind("ID,Nome,Email,Imagem")] Utilizadores utilizadores, IFormFile userFoto) //Alterações permitem receber um ficheiro no formato de IFormFile
         {
+
+            //porcessar a fotografia
+
             if (ModelState.IsValid)
             {
                 _context.Add(utilizadores);
