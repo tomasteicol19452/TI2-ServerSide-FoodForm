@@ -31,7 +31,7 @@ namespace FoodForm.Models
         /// </summary>
         [Required(ErrorMessage = "Preenchimento do Email obrigatório.")]
         [StringLength(255, ErrorMessage = "O {0} não pode exceder os {1} caracteres.")]
-        [RegularExpression("[A-Za-z0-9#$%&'*+/=?^_`{|}~-]+[@]{1}[A-Za-z0-9]+[.]{1}[A-Za-z]{2,3]")]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string Email { get; set; }
 
         /// <summary>

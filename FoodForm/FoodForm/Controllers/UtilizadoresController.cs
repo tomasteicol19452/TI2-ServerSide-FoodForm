@@ -8,16 +8,29 @@ using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace FoodForm.Controllers
 {
     public class UtilizadoresController : Controller
     {
+        /// <summary>
+        /// Variavel que identifica a BD do nosso projecto
+        /// </summary>
         private readonly FoodFormDB _context;
 
-        public UtilizadoresController(FoodFormDB context)
+
+        /// <summary>
+        /// variave que contem os dados do 'ambiente' do servidor.
+        /// Em particular, onde estão os ficheiros guardados no disco rigido do servidor.
+        /// </summary>
+        private readonly IWebHostEnvironment _caminho;
+
+        public UtilizadoresController(FoodFormDB context, IWebHostEnvironment caminho)
         {
             _context = context;
+            _caminho = caminho;
         }
 
         // GET: Utilizadores
@@ -41,7 +54,7 @@ namespace FoodForm.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
             /*
@@ -76,18 +89,70 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Nome,Email,Imagem")] Utilizadores utilizadores, IFormFile userFoto) //Alterações permitem receber um ficheiro no formato de IFormFile
+        public async Task<IActionResult> Create([Bind("ID,Nome,Email,Imagem")] Utilizadores utilizador, IFormFile fotoUser) //Alterações permitem receber um ficheiro no formato de IFormFile
         {
+            //string que contem o caminho até a imagem
+            string caminhoCompleto = "";
+            bool haImagem = false;
 
             //porcessar a fotografia
+            //será que há fotografia?->verificação de existencia de fotografia
+            if(fotoUser == null) { 
+                utilizador.Imagem = "no-user.jpg";
+            }
+            else
+            {
+                //especificação do content type
+                if(fotoUser.ContentType == "image/jpeg" || fotoUser.ContentType == "image/png")
+                {
+                    //pepara o nome unico do ficheiro para guardar no disco rigido do servido
+                    Guid g;
+                    g = Guid.NewGuid();
+                    string extensao = Path.GetExtension(fotoUser.FileName).ToLower();
+                    string nome = g.ToString() + extensao;
+                    //onde guardar o ficheiro / a sua diretoria
+                    caminhoCompleto = Path.Combine(_caminho.WebRootPath, "img\\utilizadores", nome);
+                    //assosciar o nome do ficheiro ao utilizador
+                    utilizador.Imagem = nome;
+                    //assinalar que existe imagem e é preciso guarda-la no disco
+                    haImagem = true;
+                }
+                else
+                {
+                    utilizador.Imagem = "no-user.jpg";
+                }
+            }
+
 
             if (ModelState.IsValid)
             {
-                _context.Add(utilizadores);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    //adicionar os dados do utilizador
+                    _context.Add(utilizador);
+                    //guardar os dados desse utilizador
+                    await _context.SaveChangesAsync();
+                    //se ha imagem, guardar no disco rigido
+                    if (haImagem)
+                    {
+                        using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+                        await fotoUser.CopyToAsync(stream);
+                    }
+                    //devolver o controlo a view Index
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    // se chegar aqui, é pq alguma coisa correu mesmo mal...
+                    // o que fazer?
+                    // opções a realizar (todas, ou apenas uma...):
+                    //   - escrever, no disco do servidor, um log com o erro
+                    //   - escrever numa tabela de Erros, na BD, o log do erro
+                    //   - enviar o modelo de volta para a View
+                    //   - se o erro for corrigível, corrigir o erro
+                }
             }
-            return View(utilizadores);
+            return View(utilizador);
         }
 
         // GET: Utilizadores/Edit/5
