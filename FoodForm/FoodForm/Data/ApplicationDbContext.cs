@@ -1,22 +1,22 @@
-﻿using FoodForm.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
+using FoodForm.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodForm.Data
 {
-    /// <summary>
-    /// classe que define uma, neste caso a unica, base de dados para utilizar no projecto
-    /// </summary>
-    public class FoodFormDB : DbContext
+    public class FoodFormDB : IdentityDbContext
     {
         /// <summary>
-        /// construtor da classe que serve tambem para ligar a classe à base de dados
+        /// Construtor da classe que serve tambem para ligar a classe à base de dados
         /// </summary>
         /// <param name="options"></param>
-        public FoodFormDB(DbContextOptions<FoodFormDB> options) : base(options) { }
+        public FoodFormDB(DbContextOptions<FoodFormDB> options)
+            : base(options)
+        {
+        }
 
         /// <summary>
         /// Inserção da seed na base de dados

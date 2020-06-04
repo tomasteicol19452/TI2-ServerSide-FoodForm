@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29806.167
+VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodForm", "FoodForm\FoodForm.csproj", "{85FCE82D-AC81-47B5-8723-44AEB51527A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodForm", "FoodForm\FoodForm.csproj", "{D2B79040-16B9-418F-81FE-F7FF3266D612}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{85FCE82D-AC81-47B5-8723-44AEB51527A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{85FCE82D-AC81-47B5-8723-44AEB51527A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{85FCE82D-AC81-47B5-8723-44AEB51527A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{85FCE82D-AC81-47B5-8723-44AEB51527A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2B79040-16B9-418F-81FE-F7FF3266D612}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2B79040-16B9-418F-81FE-F7FF3266D612}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2B79040-16B9-418F-81FE-F7FF3266D612}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2B79040-16B9-418F-81FE-F7FF3266D612}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E27E3B30-B483-4E88-8BE3-53CB9659F3E1}
+		SolutionGuid = {39BD45E2-7DA9-4A50-BE1B-1C6F462406E1}
 	EndGlobalSection
 EndGlobal
