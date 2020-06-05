@@ -24,6 +24,10 @@ namespace FoodForm.Data
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
+
+
             modelBuilder.Entity<Utilizadores>().HasData(
                new Utilizadores { ID = 1, Nome = "Zé", Email = "ze@mail.com", Imagem = "ze.jpg" },
                new Utilizadores { ID = 2, Nome = "Tó", Email = "to@mail.com", Imagem = "to.jpg" },
