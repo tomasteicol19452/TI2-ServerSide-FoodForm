@@ -31,6 +31,7 @@ namespace FoodForm
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>() //activa a funcionalidade dos Roles
                 .AddEntityFrameworkStores<FoodFormDB>();
             services.AddControllersWithViews();
             services.AddRazorPages();

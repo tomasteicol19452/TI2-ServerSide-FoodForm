@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodForm.Controllers
 {
+    [Authorize] //todos os métodos desta class ficaram protegidos em vez de ter de realizar a autorização individual de cada função.
     public class ReceitasController : Controller
     {
         private readonly FoodFormDB _context;
@@ -20,6 +22,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Receitas
+        [AllowAnonymous] //permite visualizar se o utilizador for anonimo -> anula o anotador [Authorize]
         public async Task<IActionResult> Index()
         {
             var foodFormDB = _context.Receitas.Include(r => r.Utilizador);
@@ -27,6 +30,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Receitas/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +50,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Receitas/Create
+        // Faz o GET da Interface para apresentar
         public IActionResult Create()
         {
             ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID");

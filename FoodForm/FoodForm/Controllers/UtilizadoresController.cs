@@ -10,9 +10,11 @@ using FoodForm.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodForm.Controllers
-{
+{   
+    [Authorize]
     public class UtilizadoresController : Controller
     {
         /// <summary>
@@ -38,6 +40,7 @@ namespace FoodForm.Controllers
         /// Invoca a View dos Utilizadores
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Index()
         {
             //em sql utilizadores.ToListAsync é o mesmo que "SELECT * FROM utilizadores"
@@ -79,6 +82,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Utilizadores/Create
+        [Authorize(Roles = "Moderador")]
         public IActionResult Create()
         {
             return View();
@@ -89,6 +93,7 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Create([Bind("ID,Nome,Email,Imagem")] Utilizadores utilizador, IFormFile fotoUser) //Alterações permitem receber um ficheiro no formato de IFormFile
         {
             //string que contem o caminho até a imagem
@@ -207,6 +212,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Utilizadores/Delete/5
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -227,6 +233,7 @@ namespace FoodForm.Controllers
         // POST: Utilizadores/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var utilizadores = await _context.Utilizadores.FindAsync(id);
