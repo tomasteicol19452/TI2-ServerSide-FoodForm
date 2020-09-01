@@ -10,8 +10,8 @@ using FoodForm.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FoodForm.Controllers
-{   
-    [Authorize]
+{
+    [Authorize(Roles = "Moderador")]
     public class ModeradoresController : Controller
     {
         private readonly FoodFormDB _context;

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodForm.Data.Migrations
 {
     [DbContext(typeof(FoodFormDB))]
-    [Migration("20200828181000_m2")]
-    partial class m2
+    [Migration("20200901182017_auth")]
+    partial class auth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

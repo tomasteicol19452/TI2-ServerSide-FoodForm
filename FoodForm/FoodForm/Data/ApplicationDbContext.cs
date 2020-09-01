@@ -25,7 +25,7 @@ namespace FoodForm.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);//importar o que havia no onModelCreating
 
 
             modelBuilder.Entity<Utilizadores>().HasData(

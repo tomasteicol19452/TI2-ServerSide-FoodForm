@@ -2,7 +2,7 @@
 
 namespace FoodForm.Data.Migrations
 {
-    public partial class m2 : Migration
+    public partial class auth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
