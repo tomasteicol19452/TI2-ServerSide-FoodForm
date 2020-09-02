@@ -30,7 +30,7 @@ namespace FoodForm
             services.AddDbContext<FoodFormDB>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>() //activa a funcionalidade dos Roles
                 .AddEntityFrameworkStores<FoodFormDB>();
             services.AddControllersWithViews();

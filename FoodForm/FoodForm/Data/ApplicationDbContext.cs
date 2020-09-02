@@ -1,13 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using FoodForm.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodForm.Data
 {
-    public class FoodFormDB : IdentityDbContext
+    /// <summary>
+    /// Construtor da classe que serve tambem para ligar a classe à base de dados
+    /// </summary>
+    public class ApplicationUser : IdentityUser
+    {
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
+        [StringLength(40, ErrorMessage = "O {0} não pode exceder os {1} caracteres.")]
+        [RegularExpression("[A-ZÓÂÍ][a-zçáéíóúàèìòùãõäëïöüâêîôûñ]+(( | d[ao](s)? | e |-|'| d')[A-ZÓÂÍ][a-zçáéíóúàèìòùãõäëïöüâêîôûñ]+){1,3}")]
+        public string Nome { get; set; }
+
+        [StringLength(255, ErrorMessage = "O nome do ficheiro não pode exceder os {1} caracteres.")]
+        [RegularExpression("[A-Za-z0-9]+(.jpg|.png){1}")]
+        public string Fotografia { get; set; }
+
+        public DateTime Timestamp { get; set; }
+    }
+
+
+    public class FoodFormDB : IdentityDbContext<ApplicationUser>
     {
         /// <summary>
         /// Construtor da classe que serve tambem para ligar a classe à base de dados
