@@ -35,7 +35,7 @@ namespace FoodForm.Models
         public string Email { get; set; }
 
         /// <summary>
-        /// Referencia remetente á localização do ficheiro de imagem deste utilizador
+        /// Referência remetente à localização do ficheiro de imagem deste utilizador
         /// </summary>
         [StringLength(255, ErrorMessage = "O nome do ficheiro não pode exceder os {1} caracteres.")]
         [RegularExpression("[A-Za-z0-9]+(.jpg|.png){1}")]
