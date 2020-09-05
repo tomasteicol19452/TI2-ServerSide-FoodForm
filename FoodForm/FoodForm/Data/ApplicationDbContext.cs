@@ -21,8 +21,7 @@ namespace FoodForm.Data
 
         [StringLength(255, ErrorMessage = "O nome do ficheiro não pode exceder os {1} caracteres.")]
         [RegularExpression("[A-Za-z0-9]+(.jpg|.png){1}")]
-        public string Fotografia { get; set; }
-
+        
         public DateTime Timestamp { get; set; }
     }
 
@@ -49,12 +48,12 @@ namespace FoodForm.Data
 
 
             modelBuilder.Entity<Utilizadores>().HasData(
-               new Utilizadores { ID = 1, Nome = "Zé", Email = "ze@mail.com", Imagem = "ze.jpg" },
-               new Utilizadores { ID = 2, Nome = "Tó", Email = "to@mail.com", Imagem = "to.jpg" },
-               new Utilizadores { ID = 3, Nome = "Ruca", Email = "ruca@mail.com", Imagem = "ruca.jpg" },
-               new Utilizadores { ID = 4, Nome = "João", Email = "joao@mail.com", Imagem = "joao.jpg" },
-               new Utilizadores { ID = 5, Nome = "Rick", Email = "rick@mail.com", Imagem = "rick.jpg" },
-               new Utilizadores { ID = 6, Nome = "Morty", Email = "morty@mail.com", Imagem = "morty.png" }
+               new Utilizadores { ID = 1, Nome = "Zé", Imagem = "ze.jpg", UserID="1" },
+               new Utilizadores { ID = 2, Nome = "Tó", Imagem = "to.jpg" },
+               new Utilizadores { ID = 3, Nome = "Ruca", Imagem = "ruca.jpg" },
+               new Utilizadores { ID = 4, Nome = "João", Imagem = "joao.jpg" },
+               new Utilizadores { ID = 5, Nome = "Rick", Imagem = "rick.jpg" },
+               new Utilizadores { ID = 6, Nome = "Morty", Imagem = "morty.png" }
                 );
 
             modelBuilder.Entity<Moderadores>().HasData(

@@ -97,7 +97,6 @@ namespace FoodForm.Areas.Identity.Pages.Account
                     UserName = Input.Email, 
                     Email = Input.Email,
                     Nome = Input.Nome,
-                    Fotografia="",
                     Timestamp = DateTime.Now
                 };
 

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FoodForm.Controllers
 {   
@@ -29,10 +30,16 @@ namespace FoodForm.Controllers
         /// </summary>
         private readonly IWebHostEnvironment _caminho;
 
-        public UtilizadoresController(FoodFormDB context, IWebHostEnvironment caminho)
+        /// <summary>
+        /// Recolher os dados remetentes á ao utlizador autenticado para esta variável
+        /// </summary>
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UtilizadoresController(FoodFormDB context, IWebHostEnvironment caminho, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _caminho = caminho;
+            _userManager = userManager;
         }
 
         // GET: Utilizadores
@@ -40,11 +47,21 @@ namespace FoodForm.Controllers
         /// Invoca a View dos Utilizadores
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Index()
         {
-            //em sql utilizadores.ToListAsync é o mesmo que "SELECT * FROM utilizadores"
-            return View(await _context.Utilizadores.ToListAsync());
+            //se o utilizador com Role = Moderador
+            if (User.IsInRole("Moderador"))
+            {
+                //em sql utilizadores.ToListAsync é o mesmo que "SELECT * FROM utilizadores"
+                return View(await _context.Utilizadores.ToListAsync());
+            }
+
+            // Senão vamos só mostrar os dados da pessoa que se autenticou
+            Utilizadores utilizador = _context.Utilizadores
+                                         .Where(u => u.UserID == _userManager.GetUserId(User))
+                                         .FirstOrDefault();
+
+            return RedirectToAction("Details", new { id = utilizador.ID });
         }
 
         // GET: Utilizadores/Details/5
@@ -57,7 +74,7 @@ namespace FoodForm.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             /*
@@ -67,15 +84,16 @@ namespace FoodForm.Controllers
              WHERE u.ID = id 
              AND r.Autor = u.ID
              AND g.UtilizadorFK = u.ID
+             AND u.UserName = AspNetUsers.ID
              */
             
             var utilizadores = await _context.Utilizadores
                 .Include(r => r.MinhasReceitas)
-                //.Include(g => g.ReceitasGostadas)
-                .FirstOrDefaultAsync(u => u.ID == id);
+                .Where(u => u.ID == id && u.UserID == _userManager.GetUserId(User))
+                .FirstOrDefaultAsync();
             if (utilizadores == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             return View(utilizadores);
@@ -94,7 +112,7 @@ namespace FoodForm.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Moderador")]
-        public async Task<IActionResult> Create([Bind("ID,Nome,Email,Imagem")] Utilizadores utilizador, IFormFile fotoUser) //Alterações permitem receber um ficheiro no formato de IFormFile
+        public async Task<IActionResult> Create([Bind("ID,Nome,Imagem")] Utilizadores utilizador, IFormFile fotoUser) //Alterações permitem receber um ficheiro no formato de IFormFile
         {
             //string que contem o caminho até a imagem
             string caminhoCompleto = "";
@@ -181,7 +199,7 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Nome,Email,Imagem")] Utilizadores utilizadores)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Nome,Imagem")] Utilizadores utilizadores)
         {
             if (id != utilizadores.ID)
             {

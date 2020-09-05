@@ -51,5 +51,10 @@ namespace FoodForm.Models
         /// Lista de receitas que este utilizador gostou
         /// </summary>
         public ICollection<Receitas> ReceitasGostadas { get; set; }
+
+        /// <summary>
+        /// String atribuida através do utilizador atenticado que corresponde ao utilizador atenticado
+        /// </summary>
+        public string UserID { get; set; }
     }
 }
