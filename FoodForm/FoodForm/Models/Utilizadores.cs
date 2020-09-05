@@ -27,14 +27,6 @@ namespace FoodForm.Models
         public string Nome { get; set; }
 
         /// <summary>
-        /// Endereço de correio electronico do utilizador
-        /// </summary>
-        [Required(ErrorMessage = "Preenchimento do Email obrigatório.")]
-        [StringLength(255, ErrorMessage = "O {0} não pode exceder os {1} caracteres.")]
-        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
-        public string Email { get; set; }
-
-        /// <summary>
         /// Referência remetente à localização do ficheiro de imagem deste utilizador
         /// </summary>
         [StringLength(255, ErrorMessage = "O nome do ficheiro não pode exceder os {1} caracteres.")]
