@@ -14,6 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using FoodForm.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace FoodForm.Areas.Identity.Pages.Account
 {
@@ -25,16 +29,30 @@ namespace FoodForm.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        /// <summary>
+        /// Onde estão guardados os ficheiros
+        /// </summary>
+        private readonly IWebHostEnvironment _caminho;
+
+        /// <summary>
+        /// Contexto da base de dados
+        /// </summary>
+        private readonly FoodFormDB _context;
+
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            FoodFormDB context,
+            IWebHostEnvironment caminho)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
+            _caminho = caminho;
         }
 
         [BindProperty]
@@ -62,11 +80,8 @@ namespace FoodForm.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "A palavra pass e a sua confirmação não são iguais.")]
             public string ConfirmPassword { get; set; }
 
-            /// <summary>
-            /// Atributo para recolher o nome do utilizador
-            /// </summary>
-            [Required]
-            public string Nome { get; set; }
+            //************** Utilizadores **********************
+            public Utilizadores Utilizador { get; set; }
         }
 
         /// <summary>
@@ -85,7 +100,7 @@ namespace FoodForm.Areas.Identity.Pages.Account
         /// </summary>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(IFormFile fotoUser ,string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             //não são utilizados ferramentas externas para a criação do registo
@@ -93,10 +108,42 @@ namespace FoodForm.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid) //refere-se ao Input Model (linha 41)
             {
+
+                //adicionar o codigo para processar o ficheiro da imagem do user
+                string caminhoCompleto = "";
+                string nomeFoto = "";
+                bool haImagem = false;
+
+                if (fotoUser == null)
+                {
+                    nomeFoto = "no-user.jpg";
+                }
+                else
+                {
+                    //especificação do content type
+                    if (fotoUser.ContentType == "image/jpeg" || fotoUser.ContentType == "image/png")
+                    {
+                        //pepara o nome unico do ficheiro para guardar no disco rigido do servido
+                        Guid g;
+                        g = Guid.NewGuid();
+                        string extensao = Path.GetExtension(fotoUser.FileName).ToLower();
+                        string nome = g.ToString() + extensao;
+                        //onde guardar o ficheiro / a sua diretoria
+                        caminhoCompleto = Path.Combine(_caminho.WebRootPath, "img\\utilizadores", nome);
+                        //assosciar o nome do ficheiro ao utilizador
+                        nomeFoto = nome;
+                        //assinalar que existe imagem e é preciso guarda-la no disco
+                        haImagem = true;
+                    }
+                    else
+                    {
+                        nomeFoto = "no-user.jpg";
+                    }
+                }
+
                 var user = new ApplicationUser { 
                     UserName = Input.Email, 
                     Email = Input.Email,
-                    Nome = Input.Nome,
                     Timestamp = DateTime.Now
                 };
 
@@ -104,6 +151,28 @@ namespace FoodForm.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    //criar na base de dados um registo com o utilizador criado
+                    Utilizadores novoUtilizador = Input.Utilizador;
+                    //ligar este Utilizador a quem fez o Registo
+                    novoUtilizador.UserID = user.Id;
+                    novoUtilizador.Imagem = nomeFoto;
+
+
+                    // adicionar estes dados e guardar na BD
+                    // adiciona o novo Utilizador à BD, mas na memória do servidor ASP .NET
+                    _context.Add(novoUtilizador);
+
+                    // consolida os dados no Servidor BD (commit)
+                    await _context.SaveChangesAsync();
+
+                    // se há imagem, vou guardá-la no disco rígido
+                    if (haImagem)
+                    {
+                        using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+                        await fotoUser.CopyToAsync(stream);
+                    }
+
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
