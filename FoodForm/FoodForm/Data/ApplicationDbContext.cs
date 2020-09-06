@@ -1,22 +1,33 @@
-﻿using FoodForm.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using FoodForm.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodForm.Data
 {
     /// <summary>
-    /// classe que define uma, neste caso a unica, base de dados para utilizar no projecto
+    /// Construtor da classe que serve tambem para ligar a classe à base de dados
     /// </summary>
-    public class FoodFormDB : DbContext
+    public class ApplicationUser : IdentityUser
+    {
+        public DateTime Timestamp { get; set; }
+    }
+
+
+    public class FoodFormDB : IdentityDbContext<ApplicationUser>
     {
         /// <summary>
-        /// construtor da classe que serve tambem para ligar a classe à base de dados
+        /// Construtor da classe que serve tambem para ligar a classe à base de dados
         /// </summary>
         /// <param name="options"></param>
-        public FoodFormDB(DbContextOptions<FoodFormDB> options) : base(options) { }
+        public FoodFormDB(DbContextOptions<FoodFormDB> options)
+            : base(options)
+        {
+        }
 
         /// <summary>
         /// Inserção da seed na base de dados
@@ -24,13 +35,17 @@ namespace FoodForm.Data
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);//importar o que havia no onModelCreating
+
+
             modelBuilder.Entity<Utilizadores>().HasData(
-               new Utilizadores { ID = 1, Nome = "Zé", Email = "ze@mail.com", Imagem = "ze.jpg" },
-               new Utilizadores { ID = 2, Nome = "Tó", Email = "to@mail.com", Imagem = "to.jpg" },
-               new Utilizadores { ID = 3, Nome = "Ruca", Email = "ruca@mail.com", Imagem = "ruca.jpg" },
-               new Utilizadores { ID = 4, Nome = "João", Email = "joao@mail.com", Imagem = "joao.jpg" },
-               new Utilizadores { ID = 5, Nome = "Rick", Email = "rick@mail.com", Imagem = "rick.jpg" },
-               new Utilizadores { ID = 6, Nome = "Morty", Email = "morty@mail.com", Imagem = "morty.png" }
+               new Utilizadores { ID = 1, Nome = "Zé", Imagem = "ze.jpg", UserID="1" },
+               new Utilizadores { ID = 2, Nome = "Tó", Imagem = "to.jpg" },
+               new Utilizadores { ID = 3, Nome = "Ruca", Imagem = "ruca.jpg" },
+               new Utilizadores { ID = 4, Nome = "João", Imagem = "joao.jpg" },
+               new Utilizadores { ID = 5, Nome = "Rick", Imagem = "rick.jpg" },
+               new Utilizadores { ID = 6, Nome = "Morty", Imagem = "morty.png" }
                 );
 
             modelBuilder.Entity<Moderadores>().HasData(

@@ -4,66 +4,85 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Receitas</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titulo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titulo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descricao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descricao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Imagem)
-        </dt>
-        <dd class = "col-sm-10">
-            <img src="~/img/receitas/@Model.Imagem" height="256" alt="@Model.Titulo" title="@Model.Titulo" />
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dificuldade)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dificuldade)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tempo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tempo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PessoasServidas)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PessoasServidas)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ingredientes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ingredientes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Utilizador)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Utilizador.ID)
-        </dd>
-    </dl>
+<h1>Receita</h1>
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Titulo)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Titulo)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Descricao)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Descricao)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Imagem)
+                </dt>
+                <dd class="col-sm-10">
+                    <img src="~/img/receitas/@Model.Imagem" height="256" alt="@Model.Titulo" title="@Model.Titulo" />
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Dificuldade)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Dificuldade)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Tempo)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Tempo)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.PessoasServidas)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PessoasServidas)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Ingredientes)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Ingredientes)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Utilizador)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Utilizador.ID)
+                </dd>
+            </dl>
+            
+        </div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="col-xs-6">
+                <div id="likeContainer">
+                    <button>Like</button>
+                    <p>nº likes</p>
+                </div>
+                <div id="commentContainer">
+                    <textarea>Comentário aqui...</textarea>
+                    <button>Comentar</button>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
-
-
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    @if(User.Identity.IsAuthenticated){<button>Denunciar</button>}
     <a asp-action="Index">Back to List</a>
+    @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.Owner)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.ID">Editar</a>
+        <a asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
+    }
 </div>

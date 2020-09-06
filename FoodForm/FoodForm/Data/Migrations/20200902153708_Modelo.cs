@@ -1,20 +1,38 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FoodForm.Migrations
+namespace FoodForm.Data.Migrations
 {
-    public partial class v1db : Migration
+    public partial class Modelo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "Fotografia",
+                table: "AspNetUsers",
+                maxLength: 255,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Nome",
+                table: "AspNetUsers",
+                maxLength: 40,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "Timestamp",
+                table: "AspNetUsers",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
             migrationBuilder.CreateTable(
                 name: "Moderadores",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    Email = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,9 +45,9 @@ namespace FoodForm.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Imagem = table.Column<string>(nullable: true)
+                    Nome = table.Column<string>(maxLength: 40, nullable: false),
+                    Email = table.Column<string>(maxLength: 255, nullable: false),
+                    Imagem = table.Column<string>(maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,10 +60,10 @@ namespace FoodForm.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(nullable: true),
-                    Descricao = table.Column<string>(nullable: true),
+                    Titulo = table.Column<string>(nullable: false),
+                    Descricao = table.Column<string>(nullable: false),
                     Imagem = table.Column<string>(nullable: true),
-                    Dificuldade = table.Column<string>(nullable: true),
+                    Dificuldade = table.Column<string>(nullable: false),
                     Tempo = table.Column<int>(nullable: false),
                     PessoasServidas = table.Column<int>(nullable: false),
                     Ingredientes = table.Column<string>(nullable: true),
@@ -76,7 +94,7 @@ namespace FoodForm.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Data = table.Column<DateTime>(nullable: false),
-                    Conteudo = table.Column<string>(nullable: true),
+                    Conteudo = table.Column<string>(nullable: false),
                     UtilizadorFK = table.Column<int>(nullable: false),
                     ReceitaFK = table.Column<int>(nullable: false)
                 },
@@ -104,7 +122,7 @@ namespace FoodForm.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Data = table.Column<DateTime>(nullable: false),
-                    Conteudo = table.Column<string>(nullable: true),
+                    Conteudo = table.Column<string>(nullable: false),
                     UtilizadorFK = table.Column<int>(nullable: false),
                     ReceitaFK = table.Column<int>(nullable: false)
                 },
@@ -151,6 +169,34 @@ namespace FoodForm.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Moderadores",
+                columns: new[] { "ID", "Email" },
+                values: new object[] { 1, "mod@mail.com" });
+
+            migrationBuilder.InsertData(
+                table: "Utilizadores",
+                columns: new[] { "ID", "Email", "Imagem", "Nome" },
+                values: new object[,]
+                {
+                    { 1, "ze@mail.com", "ze.jpg", "Zé" },
+                    { 2, "to@mail.com", "to.jpg", "Tó" },
+                    { 3, "ruca@mail.com", "ruca.jpg", "Ruca" },
+                    { 4, "joao@mail.com", "joao.jpg", "João" },
+                    { 5, "rick@mail.com", "rick.jpg", "Rick" },
+                    { 6, "morty@mail.com", "morty.png", "Morty" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Receitas",
+                columns: new[] { "ID", "Autor", "Descricao", "Dificuldade", "Imagem", "Ingredientes", "PessoasServidas", "Tempo", "Titulo", "UtilizadoresID" },
+                values: new object[] { 1, 1, "Receita deliciosa! Adiciona-se 60g de cereais a uma taça, e depois 250ml de leite. Nunca o reverso!", "Fácil", "cereais.jpg", "Leite; Cereais;", 1, 1, "Leite com cereais", null });
+
+            migrationBuilder.InsertData(
+                table: "Receitas",
+                columns: new[] { "ID", "Autor", "Descricao", "Dificuldade", "Imagem", "Ingredientes", "PessoasServidas", "Tempo", "Titulo", "UtilizadoresID" },
+                values: new object[] { 2, 1, "O clássico lanche. Uma bola ou papo-seco e manteiga. Simples!", "Fácil", "pao.jpg", "Pão; Manteiga;", 1, 1, "Pão com manteiga", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comentarios_ReceitaFK",
@@ -212,6 +258,18 @@ namespace FoodForm.Migrations
 
             migrationBuilder.DropTable(
                 name: "Utilizadores");
+
+            migrationBuilder.DropColumn(
+                name: "Fotografia",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "Nome",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "Timestamp",
+                table: "AspNetUsers");
         }
     }
 }

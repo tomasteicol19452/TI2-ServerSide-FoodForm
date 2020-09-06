@@ -7,19 +7,42 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace FoodForm.Controllers
 {
+    [Authorize] //todos os métodos desta class ficaram protegidos em vez de ter de realizar a autorização individual de cada função.
     public class ReceitasController : Controller
     {
+        /// <summary>
+        /// Variavel que identifica a BD do nosso projecto
+        /// </summary>
         private readonly FoodFormDB _context;
 
-        public ReceitasController(FoodFormDB context)
+        /// <summary>
+        /// variave que contem os dados do 'ambiente' do servidor.
+        /// Em particular, onde estão os ficheiros guardados no disco rigido do servidor.
+        /// </summary>
+        private readonly IWebHostEnvironment _caminho;
+
+        /// <summary>
+        /// Recolher os dados remetentes á ao utlizador autenticado para esta variável
+        /// </summary>
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ReceitasController(FoodFormDB context, IWebHostEnvironment caminho, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _caminho = caminho;
         }
 
         // GET: Receitas
+        [AllowAnonymous] //permite visualizar se o utilizador for anonimo -> anula o anotador [Authorize]
         public async Task<IActionResult> Index()
         {
             var foodFormDB = _context.Receitas.Include(r => r.Utilizador);
@@ -27,15 +50,22 @@ namespace FoodForm.Controllers
         }
 
         // GET: Receitas/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            
+            Utilizadores Dono = _context.Utilizadores
+                                         .Where(u => u.UserID == _userManager.GetUserId(User))
+                                         .FirstOrDefault();
+            ViewBag.Owner = Dono.ID;
 
             var receitas = await _context.Receitas
                 .Include(r => r.Utilizador)
+                .Include(c => c.ListaDeComentarios)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (receitas == null)
             {
@@ -46,8 +76,13 @@ namespace FoodForm.Controllers
         }
 
         // GET: Receitas/Create
+        // Faz o GET da Interface para apresentar
         public IActionResult Create()
         {
+            Utilizadores Dono = _context.Utilizadores
+                                         .Where(u => u.UserID == _userManager.GetUserId(User))
+                                         .FirstOrDefault();
+            ViewBag.Owner = Dono.ID;
             ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID");
             return View();
         }
@@ -57,16 +92,57 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Titulo,Descricao,Imagem,Dificuldade,Tempo,PessoasServidas,Ingredientes,Autor")] Receitas receitas)
+        public async Task<IActionResult> Create([Bind("ID,Titulo,Descricao,Imagem,Dificuldade,Tempo,PessoasServidas,Ingredientes,Autor")] Receitas receita, IFormFile fotoReceita)
         {
+            //string que contem o caminho até a imagem
+            string caminhoCompleto = "";
+            bool haImagem = false;
+
+            //porcessar a fotografia
+            //será que há fotografia?->verificação de existencia de fotografia
+            if (fotoReceita == null)
+            {
+                receita.Imagem = "no-food.jpg";
+            }
+            else
+            {
+                //especificação do content type
+                if (fotoReceita.ContentType == "image/jpeg" || fotoReceita.ContentType == "image/png")
+                {
+                    //pepara o nome unico do ficheiro para guardar no disco rigido do servido
+                    Guid g;
+                    g = Guid.NewGuid();
+                    string extensao = Path.GetExtension(fotoReceita.FileName).ToLower();
+                    string nome = g.ToString() + extensao;
+                    //onde guardar o ficheiro / a sua diretoria
+                    caminhoCompleto = Path.Combine(_caminho.WebRootPath, "img\\receitas", nome);
+                    //assosciar o nome do ficheiro á receita
+                    receita.Imagem = nome;
+                    //assinalar que existe imagem e é preciso guarda-la no disco
+                    haImagem = true;
+                }
+                else
+                {
+                    receita.Imagem = "no-food.jpg";
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(receitas);
+                _context.Add(receita);
                 await _context.SaveChangesAsync();
+
+                //se ha imagem, guardar no disco rigido
+                if (haImagem)
+                {
+                    using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+                    await fotoReceita.CopyToAsync(stream);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID", receitas.Autor);
-            return View(receitas);
+            ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID", receita.Autor);
+            return View(receita);
         }
 
         // GET: Receitas/Edit/5
@@ -76,6 +152,11 @@ namespace FoodForm.Controllers
             {
                 return NotFound();
             }
+
+            Utilizadores Dono = _context.Utilizadores
+                                        .Where(u => u.UserID == _userManager.GetUserId(User))
+                                        .FirstOrDefault();
+            ViewBag.Owner = Dono.ID;
 
             var receitas = await _context.Receitas.FindAsync(id);
             if (receitas == null)
@@ -91,11 +172,44 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Titulo,Descricao,Imagem,Dificuldade,Tempo,PessoasServidas,Ingredientes,Autor")] Receitas receitas)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Titulo,Descricao,Imagem,Dificuldade,Tempo,PessoasServidas,Ingredientes,Autor")] Receitas receitas, IFormFile fotoReceita)
         {
             if (id != receitas.ID)
             {
                 return NotFound();
+            }
+
+            //string que contem o caminho até a imagem
+            string caminhoCompleto = "";
+            bool haImagem = false;
+
+            //porcessar a fotografia
+            //será que há fotografia?->verificação de existencia de fotografia
+            if (fotoReceita == null)
+            {
+                receitas.Imagem = "no-food.jpg";
+            }
+            else
+            {
+                //especificação do content type
+                if (fotoReceita.ContentType == "image/jpeg" || fotoReceita.ContentType == "image/png")
+                {
+                    //pepara o nome unico do ficheiro para guardar no disco rigido do servido
+                    Guid g;
+                    g = Guid.NewGuid();
+                    string extensao = Path.GetExtension(fotoReceita.FileName).ToLower();
+                    string nome = g.ToString() + extensao;
+                    //onde guardar o ficheiro / a sua diretoria
+                    caminhoCompleto = Path.Combine(_caminho.WebRootPath, "img\\receitas", nome);
+                    //assosciar o nome do ficheiro á receita
+                    receitas.Imagem = nome;
+                    //assinalar que existe imagem e é preciso guarda-la no disco
+                    haImagem = true;
+                }
+                else
+                {
+                    receitas.Imagem = "no-food.jpg";
+                }
             }
 
             if (ModelState.IsValid)
@@ -104,6 +218,13 @@ namespace FoodForm.Controllers
                 {
                     _context.Update(receitas);
                     await _context.SaveChangesAsync();
+
+                    //se ha imagem, guardar no disco rigido
+                    if (haImagem)
+                    {
+                        using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+                        await fotoReceita.CopyToAsync(stream);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

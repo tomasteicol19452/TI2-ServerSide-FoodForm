@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodForm.Controllers
 {
+    [Authorize(Roles = "Moderador")]
     public class ModeradoresController : Controller
     {
         private readonly FoodFormDB _context;
