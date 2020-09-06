@@ -74,6 +74,7 @@ namespace FoodForm.Controllers
         {
             if (id == null)
             {
+                
                 return RedirectToAction("Index", "Home");
             }
 
@@ -89,7 +90,7 @@ namespace FoodForm.Controllers
             
             var utilizadores = await _context.Utilizadores
                 .Include(r => r.MinhasReceitas)
-                .Where(u => u.ID == id && u.UserID == _userManager.GetUserId(User))
+                .Where(u => u.ID == id)
                 .FirstOrDefaultAsync();
             if (utilizadores == null)
             {

@@ -22,6 +22,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Gostos
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Index()
         {
             var foodFormDB = _context.Gostos.Include(g => g.Receita).Include(g => g.Utilizador);
@@ -29,6 +30,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Gostos/Details/5
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

@@ -43,7 +43,7 @@ else
         @foreach (var receita in Model.MinhasReceitas) //lista de todas as receitas criadas por este utilizador
         {
             <tr>
-                @*<a href="../Receitas/Details/@receita.ID">*@<td>@receita.Titulo</td>@*</a>*@
+                <td><a asp-controller="Receitas" asp-action="Details" asp-route-id="@receita.ID">@receita.Titulo</a></td>
             </tr>
         }
     </table>
@@ -53,5 +53,5 @@ else
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Voltar</a>
 </div>

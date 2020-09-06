@@ -1,16 +1,10 @@
 ﻿@model IEnumerable<FoodForm.Models.Receitas>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Receitas";
 }
 
-<h1>Index</h1>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <p>
-            <a asp-action="Create">Create New</a>
-        </p>
-    }
+<h1>Receitas</h1>
     <table class="table">
         <thead>
             <tr>
@@ -69,14 +63,8 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Utilizador.ID)
                 </td>
-                
                 <td>
-                    @if (User.Identity.IsAuthenticated)
-                    {<a asp-action="Edit" asp-route-id="@item.ID">Edit</a>}
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
-                    @if (User.Identity.IsAuthenticated) 
-                    {<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>}
-                        
+                    <a asp-action="Details" asp-route-id="@item.ID">Ver</a>
                 </td>
             </tr>
             }
