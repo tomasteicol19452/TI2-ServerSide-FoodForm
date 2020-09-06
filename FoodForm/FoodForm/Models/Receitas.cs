@@ -74,5 +74,10 @@ namespace FoodForm.Models
         /// Lista de comentários feitos a esta receita
         /// </summary>
         public ICollection<Comentarios> ListaDeComentarios { get; set; }
+
+        /// <summary>
+        /// Lista de gostos relacionados com esta receita
+        /// </summary>
+        public ICollection<Gostos> ListaDeGostos{ get; set; }
     }
 }

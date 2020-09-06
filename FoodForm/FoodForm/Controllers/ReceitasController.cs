@@ -65,6 +65,7 @@ namespace FoodForm.Controllers
 
             var receitas = await _context.Receitas
                 .Include(r => r.Utilizador)
+                .Include(c => c.ListaDeComentarios)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (receitas == null)
             {
@@ -152,6 +153,11 @@ namespace FoodForm.Controllers
                 return NotFound();
             }
 
+            Utilizadores Dono = _context.Utilizadores
+                                        .Where(u => u.UserID == _userManager.GetUserId(User))
+                                        .FirstOrDefault();
+            ViewBag.Owner = Dono.ID;
+
             var receitas = await _context.Receitas.FindAsync(id);
             if (receitas == null)
             {
@@ -166,11 +172,44 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Titulo,Descricao,Imagem,Dificuldade,Tempo,PessoasServidas,Ingredientes,Autor")] Receitas receitas)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Titulo,Descricao,Imagem,Dificuldade,Tempo,PessoasServidas,Ingredientes,Autor")] Receitas receitas, IFormFile fotoReceita)
         {
             if (id != receitas.ID)
             {
                 return NotFound();
+            }
+
+            //string que contem o caminho até a imagem
+            string caminhoCompleto = "";
+            bool haImagem = false;
+
+            //porcessar a fotografia
+            //será que há fotografia?->verificação de existencia de fotografia
+            if (fotoReceita == null)
+            {
+                receitas.Imagem = "no-food.jpg";
+            }
+            else
+            {
+                //especificação do content type
+                if (fotoReceita.ContentType == "image/jpeg" || fotoReceita.ContentType == "image/png")
+                {
+                    //pepara o nome unico do ficheiro para guardar no disco rigido do servido
+                    Guid g;
+                    g = Guid.NewGuid();
+                    string extensao = Path.GetExtension(fotoReceita.FileName).ToLower();
+                    string nome = g.ToString() + extensao;
+                    //onde guardar o ficheiro / a sua diretoria
+                    caminhoCompleto = Path.Combine(_caminho.WebRootPath, "img\\receitas", nome);
+                    //assosciar o nome do ficheiro á receita
+                    receitas.Imagem = nome;
+                    //assinalar que existe imagem e é preciso guarda-la no disco
+                    haImagem = true;
+                }
+                else
+                {
+                    receitas.Imagem = "no-food.jpg";
+                }
             }
 
             if (ModelState.IsValid)
@@ -179,6 +218,13 @@ namespace FoodForm.Controllers
                 {
                     _context.Update(receitas);
                     await _context.SaveChangesAsync();
+
+                    //se ha imagem, guardar no disco rigido
+                    if (haImagem)
+                    {
+                        using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+                        await fotoReceita.CopyToAsync(stream);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
