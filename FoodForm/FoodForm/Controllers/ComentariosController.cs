@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FoodForm.Controllers
 {
@@ -16,12 +17,16 @@ namespace FoodForm.Controllers
     {
         private readonly FoodFormDB _context;
 
-        public ComentariosController(FoodFormDB context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ComentariosController(FoodFormDB context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Comentarios
+        [Authorize(Roles ="Moderador")]
         public async Task<IActionResult> Index()
         {
             var foodFormDB = _context.Comentarios.Include(c => c.Receita).Include(c => c.Utilizador);
@@ -29,6 +34,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Comentarios/Details/5
+        [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -61,17 +67,40 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Data,Conteudo,UtilizadorFK,ReceitaFK")] Comentarios comentarios)
+        public async Task<IActionResult> Create([Bind("Conteudo")] Comentarios comentarios, int id)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(comentarios);
+                //Utilizador que está a comentar
+                Utilizadores user = _context.Utilizadores
+                    .Where(u => u.UserID == _userManager.GetUserId(User))
+                    .FirstOrDefault();
+                //Receita que está a ser comentada
+                Receitas receita = _context.Receitas
+                    .Where(r => r.ID == id)
+                    .FirstOrDefault();
+
+                if( user == null || receita == null)
+                {
+                    return NotFound();
+                }
+
+                //criação do comentario
+                var comentario = new Comentarios
+                {
+                    Conteudo = comentarios.Conteudo,
+                    Data = DateTime.Now,
+                    UtilizadorFK = user.ID,
+                    ReceitaFK = receita.ID
+                };
+
+                _context.Comentarios.Add(comentario);
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return View();
             }
-            ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", comentarios.ReceitaFK);
-            ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", comentarios.UtilizadorFK);
-            return View(comentarios);
+            return NotFound();
         }
 
         //// GET: Comentarios/Edit/5
@@ -137,16 +166,16 @@ namespace FoodForm.Controllers
                 return NotFound();
             }
 
-            var comentarios = await _context.Comentarios
+            var comentario = await _context.Comentarios
                 .Include(c => c.Receita)
                 .Include(c => c.Utilizador)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (comentarios == null)
+            if (comentario == null)
             {
                 return NotFound();
             }
 
-            return View(comentarios);
+            return View();
         }
 
         // POST: Comentarios/Delete/5

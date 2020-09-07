@@ -4,13 +4,13 @@
 
 <div class="text-center">
     <h1 class="display-4">Bemvindo ao FoodForm!</h1>
-    <a class="text-dark" asp-area="" asp-controller="Receitas" asp-action="Index">
-        <button>Todas as Receitas</button>
+    <a class="btn btn-dark" asp-area="" asp-controller="Receitas" asp-action="Index">
+        Todas as Receitas
     </a>
     @if (User.Identity.IsAuthenticated)
     {
-        <a class="text-dark" asp-area="" asp-controller="Receitas" asp-action="Create">
-            <button>Criar uma receita</button>
+        <a class="btn btn-dark" asp-area="" asp-controller="Receitas" asp-action="Create">
+            Criar uma receita
         </a>
     }
 

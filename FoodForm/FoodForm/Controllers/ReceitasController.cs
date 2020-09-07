@@ -63,9 +63,20 @@ namespace FoodForm.Controllers
                                          .FirstOrDefault();
             ViewBag.Owner = Dono.ID;
 
+            Gostos gostado = _context.Gostos
+                .Where(u => u.UtilizadorFK == Dono.ID && u.ReceitaFK == id).FirstOrDefault();
+            if(gostado == null)
+            {
+                ViewBag.Liked = false;
+            } else
+            {
+                ViewBag.Liked = true;
+            }
+
             var receitas = await _context.Receitas
                 .Include(r => r.Utilizador)
                 .Include(c => c.ListaDeComentarios)
+                .Include(g => g.ListaDeGostos)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (receitas == null)
             {
