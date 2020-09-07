@@ -61,7 +61,7 @@ namespace FoodForm.Controllers
             Utilizadores Dono = _context.Utilizadores
                                          .Where(u => u.UserID == _userManager.GetUserId(User))
                                          .FirstOrDefault();
-            ViewBag.Owner = Dono.ID;
+            ViewBag.ID_Dono = Dono.ID;
 
             Gostos gostado = _context.Gostos
                 .Where(u => u.UtilizadorFK == Dono.ID && u.ReceitaFK == id).FirstOrDefault();
@@ -78,6 +78,7 @@ namespace FoodForm.Controllers
                 .Include(c => c.ListaDeComentarios)
                 .Include(g => g.ListaDeGostos)
                 .FirstOrDefaultAsync(m => m.ID == id);
+            
             if (receitas == null)
             {
                 return NotFound();

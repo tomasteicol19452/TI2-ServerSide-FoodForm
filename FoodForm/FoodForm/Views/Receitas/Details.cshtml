@@ -9,23 +9,14 @@
 <div class="container-fluid">
     <div class="row">
         <dl class="col receitaContainer">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Titulo)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Titulo)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Descricao)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Descricao)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Imagem)
-            </dt>
             <dd class="col-sm-10">
                 <img src="~/img/receitas/@Model.Imagem" height="256" alt="@Model.Titulo" title="@Model.Titulo" />
+            </dd>
+            <dd class="col-sm-12">
+                <h2>@Html.DisplayFor(model => model.Titulo)</h2>
+            </dd>
+            <dd class="col-sm-12">
+                <p>@Html.DisplayFor(model => model.Descricao)</p>
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Dificuldade)
@@ -55,14 +46,14 @@
                 @Html.DisplayNameFor(model => model.Utilizador)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Utilizador.ID)
+                @Html.DisplayFor(model => model.Utilizador.Nome)    
             </dd>
         </dl>
         <div class="col comentariosContainer">
 
             @if (User.Identity.IsAuthenticated)
             {
-                <h2>Comentários</h2>
+                <h2>Comentários<a class="btn btn-light" asp-controller="Comentarios" asp-action="Create" asp-route-id="@Model.ID"><span>✏️</span></a></h2>
                 <hr />
                 @if (Model.ListaDeComentarios.Count == 0) //se não houver receitas associadas a esta conta ou seja o count for 0.
                 {
@@ -78,7 +69,7 @@
                                 @Html.DisplayFor(modelItem => item.Conteudo)
                                 <br />
                                 @Html.DisplayFor(modelItem => item.Data)
-                                @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.Owner || User.IsInRole("Moderador"))
+                                @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono || User.IsInRole("Moderador"))
                                 {
                                     <div class="col">
                                         <a asp-controller="Comentarios" asp-action="Delete" asp-route-id="@item.ID">
@@ -94,35 +85,41 @@
         </div>
         
     </div>
-        @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
-        {
-            <div class="row likeContainer">
-                @if (ViewBag.Liked == true) { 
-                        <button class="btn btn-success">Like</button> 
-                    } else { 
-                        <button class="btn btn-primary">Like</button> 
-                    }
-                @Model.ListaDeGostos.Count Gostos
-            </div>
-            <div class="row">
-                <button>Comentar</button>
-                <button></button>
-            </div>
+
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
+    {
+        <div class="row likeContainer">
+    @if (ViewBag.Liked == true)
+    {
+        <form asp-action="Delete" asp-controller="Gostos" method="post">
+            <input type="hidden" asp-for="ID" />
+            <input type="submit" value="Gostei" class="btn btn-success" />
+        </form>
+    }
+    else
+    {
+        <form asp-action="Create" asp-controller="Gostos" method="post">
+            <input type="hidden" asp-for="ID" />
+            <input type="submit" value="Gostar" class="btn btn-primary" />
+        </form>
+    }
+        @Model.ListaDeGostos.Count Gosto(s)
+        </div>
+        <div class="row">
+            <a class="btn btn-dark" asp-action="Create" asp-controller="Denuncias" asp-route-id="@Model.ID">Denunciar</a>
+        </div>
             
-        }
-        
-        
-        <div class="row likeContainer"></div>
+    }
             
 
 
-        <a asp-action="Index">Back to List</a>
+    <a class="btn btn-light" asp-action="Index">Voltar</a>
 
-        @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.Owner)
-        {
-            <a asp-action="Edit" asp-route-id="@Model.ID">Editar</a>
+    @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono)
+    {
+        <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.ID">Editar</a>
 
-            <a class="text-danger" asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
-        }
-    </div>
+        <a class="btn btn-light" asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
+    }
 </div>
+

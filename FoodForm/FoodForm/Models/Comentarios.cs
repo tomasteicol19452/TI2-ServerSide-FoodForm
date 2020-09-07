@@ -21,7 +21,6 @@ namespace FoodForm.Models
         /// Conteudo do comentário
         /// </summary>
         [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
-        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ]+")]
         public string Conteudo { get; set; }
 
         [ForeignKey(nameof(Utilizador))]

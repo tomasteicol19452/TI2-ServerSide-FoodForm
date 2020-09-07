@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FoodForm.Controllers
 {
@@ -16,9 +17,12 @@ namespace FoodForm.Controllers
     {
         private readonly FoodFormDB _context;
 
-        public GostosController(FoodFormDB context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public GostosController(FoodFormDB context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Gostos
@@ -50,30 +54,48 @@ namespace FoodForm.Controllers
             return View(gostos);
         }
 
-        // GET: Gostos/Create
-        public IActionResult Create()
-        {
-            ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao");
-            ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email");
-            return View();
-        }
+        //// GET: Gostos/Create
+        //public IActionResult Create()
+        //{
+        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao");
+        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email");
+        //    return View();
+        //}
 
         // POST: Gostos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Utilizador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Gosto,UtilizadorFK,ReceitaFK")] Gostos gostos)
+        public async Task<IActionResult> Create(int id)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(gostos);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            //Utilizador que está a gostar
+            Utilizadores user = _context.Utilizadores
+                .Where(u => u.UserID == _userManager.GetUserId(User))
+                .FirstOrDefault();
+            //Receita que está a ser gostado
+            Receitas receita = _context.Receitas
+                .Where(r => r.ID == id)
+                .FirstOrDefault();
+
+            if(user == null || receita == null){
+                return NotFound();
             }
-            ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", gostos.ReceitaFK);
-            ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", gostos.UtilizadorFK);
-            return View(gostos);
+            else
+            {
+                //criar o gosto
+                var gosto = new Gostos
+                {
+                    ReceitaFK = receita.ID,
+                    UtilizadorFK = user.ID,
+                    Gosto = true
+                };
+
+                _context.Gostos.Add(gosto);
+                await _context.SaveChangesAsync();
+                return null;
+            }
         }
 
         //// GET: Gostos/Edit/5
@@ -132,34 +154,45 @@ namespace FoodForm.Controllers
         //}
 
         // GET: Gostos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var gostos = await _context.Gostos
-                .Include(g => g.Receita)
-                .Include(g => g.Utilizador)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (gostos == null)
-            {
-                return NotFound();
-            }
+        //    var gostos = await _context.Gostos
+        //        .Include(g => g.Receita)
+        //        .Include(g => g.Utilizador)
+        //        .FirstOrDefaultAsync(m => m.ID == id);
+        //    if (gostos == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(gostos);
-        }
+        //    return View();
+        //}
 
         // POST: Gostos/Delete/5
+        [Authorize(Roles = "Utilizador")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var gostos = await _context.Gostos.FindAsync(id);
-            _context.Gostos.Remove(gostos);
+            //Utilizador que está a gostar
+            Utilizadores user = _context.Utilizadores
+                .Where(u => u.UserID == _userManager.GetUserId(User))
+                .FirstOrDefault();
+            //Receita que está a ser gostado
+            Receitas receita = _context.Receitas
+                .Where(r => r.ID == id)
+                .FirstOrDefault();
+            //Gosto a ser apagado
+            Gostos gosto = _context.Gostos.Where(g => g.ReceitaFK == receita.ID && g.UtilizadorFK == user.ID).FirstOrDefault();
+
+            _context.Gostos.Remove(gosto);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return null;
         }
 
         private bool GostosExists(int id)

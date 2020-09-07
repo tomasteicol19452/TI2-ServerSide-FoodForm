@@ -17,8 +17,7 @@ namespace FoodForm.Models
         /// <summary>
         /// Denuncia da receita em questão no caso de ser imprópria. O moderador depois de rever a denuncia, elimina a denuncia e/ou apaga a receita.
         /// </summary>
-        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
-        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ]+")]
+        [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]        
         public string Conteudo { get; set; }
 
         [ForeignKey(nameof(Utilizador))]

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodForm.Data;
 using FoodForm.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FoodForm.Controllers
 {
@@ -16,9 +17,12 @@ namespace FoodForm.Controllers
     {
         private readonly FoodFormDB _context;
 
-        public DenunciasController(FoodFormDB context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public DenunciasController(FoodFormDB context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         
         // GET: Denuncias
@@ -51,6 +55,7 @@ namespace FoodForm.Controllers
         }
 
         // GET: Denuncias/Create
+        [Authorize(Roles = "Utilizador")]
         public IActionResult Create()
         {
             ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao");
@@ -61,19 +66,44 @@ namespace FoodForm.Controllers
         // POST: Denuncias/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Utilizador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Data,Conteudo,UtilizadorFK,ReceitaFK")] Denuncias denuncias)
+        public async Task<IActionResult> Create([Bind("ID,Data,Conteudo,UtilizadorFK,ReceitaFK")] Denuncias denuncias, int id)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(denuncias);
+                //Utilizador que está a denunciar
+                Utilizadores user = _context.Utilizadores
+                    .Where(u => u.UserID == _userManager.GetUserId(User))
+                    .FirstOrDefault();
+                //Receita que está a ser denunciao
+                Receitas receita = _context.Receitas
+                    .Where(r => r.ID == id)
+                    .FirstOrDefault();
+
+                if (user == null || receita == null)
+                {
+                    return NotFound();
+                }
+
+                //criação da denuncia
+                var denuncia = new Denuncias
+                {
+                    Conteudo = denuncias.Conteudo,
+                    Data = DateTime.Now,
+                    UtilizadorFK = user.ID,
+                    ReceitaFK = receita.ID
+                };
+
+
+                _context.Denuncias.Add(denuncia);
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return View();
             }
-            ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", denuncias.ReceitaFK);
-            ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", denuncias.UtilizadorFK);
-            return View(denuncias);
+            return NotFound();
         }
 
         //// GET: Denuncias/Edit/5
