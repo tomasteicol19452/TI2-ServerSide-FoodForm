@@ -101,7 +101,7 @@ namespace FoodForm.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return View();
+                return RedirectToAction("Details", "Receitas", new { Id = id });
             }
             return NotFound();
         }

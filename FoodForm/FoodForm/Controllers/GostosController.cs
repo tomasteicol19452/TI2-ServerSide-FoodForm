@@ -94,7 +94,8 @@ namespace FoodForm.Controllers
 
                 _context.Gostos.Add(gosto);
                 await _context.SaveChangesAsync();
-                return null;
+                //Redireciona para página da receita
+                return RedirectToAction("Details", "Receitas", new { Id = id });
             }
         }
 
@@ -183,7 +184,7 @@ namespace FoodForm.Controllers
             Utilizadores user = _context.Utilizadores
                 .Where(u => u.UserID == _userManager.GetUserId(User))
                 .FirstOrDefault();
-            //Receita que está a ser gostado
+            //Receita que está a ser gostada
             Receitas receita = _context.Receitas
                 .Where(r => r.ID == id)
                 .FirstOrDefault();
@@ -192,7 +193,8 @@ namespace FoodForm.Controllers
 
             _context.Gostos.Remove(gosto);
             await _context.SaveChangesAsync();
-            return null;
+            //Redireciona para a página da receita
+            return RedirectToAction("Details","Receitas",new {Id = id});
         }
 
         private bool GostosExists(int id)

@@ -34,13 +34,21 @@
                 @Html.DisplayNameFor(model => model.PessoasServidas)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.PessoasServidas)
+                Nº de Pessoas Servidas
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Ingredientes)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Ingredientes)
+                @if (Model.Ingredientes == null)
+                {
+                    <text>Não foram identidicados os ingredientes... </text>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Ingredientes)
+                }
+
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Utilizador)
@@ -89,6 +97,7 @@
     @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
     {
         <div class="row likeContainer">
+
     @if (ViewBag.Liked == true)
     {
         <form asp-action="Delete" asp-controller="Gostos" method="post">

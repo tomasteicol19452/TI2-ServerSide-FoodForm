@@ -13,7 +13,7 @@ namespace FoodForm.Models
         public int ID { get; set; }
 
         /// <summary>
-        /// Valor que define se foi gostada ou desgostada a receita, podendo-se atribuir um gosto ou desgosto por receita. Valores null = neutro, true = gostou, false = não gostou.
+        /// Valor que define se foi gostada ou desgostada a receita, podendo-se atribuir um gosto ou desgosto por receita. Valores true = gostou.
         /// </summary>
         public Boolean Gosto { get; set; }
 

@@ -65,6 +65,7 @@ namespace FoodForm.Controllers
 
             Gostos gostado = _context.Gostos
                 .Where(u => u.UtilizadorFK == Dono.ID && u.ReceitaFK == id).FirstOrDefault();
+
             if(gostado == null)
             {
                 ViewBag.Liked = false;
@@ -95,7 +96,7 @@ namespace FoodForm.Controllers
                                          .Where(u => u.UserID == _userManager.GetUserId(User))
                                          .FirstOrDefault();
             ViewBag.Owner = Dono.ID;
-            ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID");
+            //ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID");
             return View();
         }
 
@@ -114,7 +115,7 @@ namespace FoodForm.Controllers
             //será que há fotografia?->verificação de existencia de fotografia
             if (fotoReceita == null)
             {
-                receita.Imagem = "no-food.jpg";
+                receita.Imagem = "no-food.png";
             }
             else
             {
@@ -135,7 +136,7 @@ namespace FoodForm.Controllers
                 }
                 else
                 {
-                    receita.Imagem = "no-food.jpg";
+                    receita.Imagem = "no-food.png";
                 }
             }
 
@@ -153,7 +154,7 @@ namespace FoodForm.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Autor"] = new SelectList(_context.Utilizadores, "ID", "ID", receita.Autor);
+            ViewBag.Owner = receita.Autor;
             return View(receita);
         }
 

@@ -98,8 +98,8 @@ namespace FoodForm.Controllers
                 _context.Comentarios.Add(comentario);
 
                 await _context.SaveChangesAsync();
-                
-                return View();
+
+                return RedirectToAction("Details", "Receitas", new { Id = id });
             }
             return NotFound();
         }
