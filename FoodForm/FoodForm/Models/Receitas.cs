@@ -58,9 +58,9 @@ namespace FoodForm.Models
         public int PessoasServidas { get; set; }
 
         /// <summary>
-        /// Ingredientes base presentes na receita
+        /// Ingredientes base presentes na receita que o autor queira especificar
         /// </summary>
-        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ ]+[;]", ErrorMessage ="Os ingredientes devem estar separados por ';'.")]
+        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ]+[;]", ErrorMessage ="Os ingredientes devem estar separados por ';'.")]
         public string Ingredientes { get; set; }
 
         /// <summary>

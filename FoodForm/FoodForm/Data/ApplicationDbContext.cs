@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Text;
 using FoodForm.Models;
 using Microsoft.AspNetCore.Identity;
@@ -35,21 +36,18 @@ namespace FoodForm.Data
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            
             base.OnModelCreating(modelBuilder);//importar o que havia no onModelCreating
 
 
+
             modelBuilder.Entity<Utilizadores>().HasData(
-               new Utilizadores { ID = 1, Nome = "Zé", Imagem = "ze.jpg", UserID="1" },
+               new Utilizadores { ID = 1, Nome = "Zé", Imagem = "ze.jpg" },
                new Utilizadores { ID = 2, Nome = "Tó", Imagem = "to.jpg" },
                new Utilizadores { ID = 3, Nome = "Ruca", Imagem = "ruca.jpg" },
                new Utilizadores { ID = 4, Nome = "João", Imagem = "joao.jpg" },
                new Utilizadores { ID = 5, Nome = "Rick", Imagem = "rick.jpg" },
                new Utilizadores { ID = 6, Nome = "Morty", Imagem = "morty.png" }
-                );
-
-            modelBuilder.Entity<Moderadores>().HasData(
-               new Moderadores { ID = 1, Email = "mod@mail.com" }
                 );
 
             modelBuilder.Entity<Receitas>().HasData(
@@ -87,7 +85,9 @@ namespace FoodForm.Data
         public DbSet<Receitas> Receitas { get; set; }
         public DbSet<Comentarios> Comentarios { get; set; }
         public DbSet<Gostos> Gostos { get; set; }
-        public DbSet<Moderadores> Moderadores { get; set; }
         public DbSet<Denuncias> Denuncias { get; set; }
     }
+
+   
+
 }

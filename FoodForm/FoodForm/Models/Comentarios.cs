@@ -23,10 +23,16 @@ namespace FoodForm.Models
         [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
         public string Conteudo { get; set; }
 
+        /// <summary>
+        /// Utilizador que comentou a receita
+        /// </summary>
         [ForeignKey(nameof(Utilizador))]
         public int UtilizadorFK { get; set; }
         public Utilizadores Utilizador { get; set; }
 
+        /// <summary>
+        /// Receita comentada
+        /// </summary>
         [ForeignKey(nameof(Receita))]
         public int ReceitaFK { get; set; }
         public Receitas Receita { get; set; }
