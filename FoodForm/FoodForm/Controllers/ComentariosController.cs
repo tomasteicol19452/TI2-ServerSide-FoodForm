@@ -184,10 +184,10 @@ namespace FoodForm.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var comentarios = await _context.Comentarios.FindAsync(id);
-            _context.Comentarios.Remove(comentarios);
+            var comentario = await _context.Comentarios.FindAsync(id);
+            _context.Comentarios.Remove(comentario);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Receitas", new { Id = comentario.ReceitaFK });
         }
 
         private bool ComentariosExists(int id)

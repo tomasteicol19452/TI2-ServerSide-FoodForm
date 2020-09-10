@@ -28,13 +28,13 @@
                 @Html.DisplayNameFor(model => model.Tempo)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Tempo)
+                @Html.DisplayFor(model => model.Tempo) min
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.PessoasServidas)
+                Nº de Pessoas Servidas
             </dt>
             <dd class="col-sm-10">
-                Nº de Pessoas Servidas
+                @Html.DisplayFor(model => model.PessoasServidas)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Ingredientes)
@@ -42,7 +42,7 @@
             <dd class="col-sm-10">
                 @if (Model.Ingredientes == null)
                 {
-                    <text>Não foram identidicados os ingredientes... </text>
+                    <text>Nenhum ingrediente identificado </text>
                 }
                 else
                 {
@@ -54,7 +54,7 @@
                 @Html.DisplayNameFor(model => model.Utilizador)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Utilizador.Nome)    
+                @Html.DisplayFor(model => model.Utilizador.Nome)
             </dd>
         </dl>
         <div class="col comentariosContainer">
@@ -73,7 +73,7 @@
                     {
                         <div id="comentario row">
                             <div class="col">
-                                <h5>@Html.DisplayFor(modelItem => item.UtilizadorFK)</h5>
+                                <h5>@Html.DisplayFor(modelItem => item.Utilizador.Nome)</h5>
                                 @Html.DisplayFor(modelItem => item.Conteudo)
                                 <br />
                                 @Html.DisplayFor(modelItem => item.Data)
@@ -91,35 +91,35 @@
                 }
             }
         </div>
-        
+
     </div>
 
     @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
     {
         <div class="row likeContainer">
 
-    @if (ViewBag.Liked == true)
-    {
-        <form asp-action="Delete" asp-controller="Gostos" method="post">
-            <input type="hidden" asp-for="ID" />
-            <input type="submit" value="Gostei" class="btn btn-success" />
-        </form>
-    }
-    else
-    {
-        <form asp-action="Create" asp-controller="Gostos" method="post">
-            <input type="hidden" asp-for="ID" />
-            <input type="submit" value="Gostar" class="btn btn-primary" />
-        </form>
-    }
-        @Model.ListaDeGostos.Count Gosto(s)
+            @if (ViewBag.Liked == true)
+            {
+                <form asp-action="Delete" asp-controller="Gostos" method="post">
+                    <input type="hidden" asp-for="ID" />
+                    <input type="submit" value="Gostei" class="btn btn-success" />
+                </form>
+            }
+            else
+            {
+                <form asp-action="Create" asp-controller="Gostos" method="post">
+                    <input type="hidden" asp-for="ID" />
+                    <input type="submit" value="Gostar" class="btn btn-primary" />
+                </form>
+            }
+            @Model.ListaDeGostos.Count Gosto(s)
         </div>
         <div class="row">
             <a class="btn btn-dark" asp-action="Create" asp-controller="Denuncias" asp-route-id="@Model.ID">Denunciar</a>
         </div>
-            
+
     }
-            
+
 
 
     <a class="btn btn-light" asp-action="Index">Voltar</a>
@@ -127,8 +127,10 @@
     @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono)
     {
         <a class="btn btn-light" asp-action="Edit" asp-route-id="@Model.ID">Editar</a>
-
-        <a class="btn btn-light" asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
+    }
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Moderador") || User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono)
+    {
+    <a class="btn btn-light" asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
     }
 </div>
 
