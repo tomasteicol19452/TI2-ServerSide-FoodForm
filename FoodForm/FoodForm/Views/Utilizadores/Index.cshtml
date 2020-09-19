@@ -35,10 +35,9 @@
                         <img src="~/img/utilizadores/@item.Imagem" height="80" alt="@item.Nome" title="@item.Nome" />
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                        @if (User.IsInRole("Moderador"))
-                        {<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>}
+                        <a class="btn" asp-action="Edit" asp-route-id="@item.ID"><i class="fa fa-pencil" aria-hidden="true"></i></a> |
+                        <a class="btn " asp-action="Details" asp-route-id="@item.ID"><i class="fa fa-eye" aria-hidden="true"></i></a> |
+                        <a class="btn" asp-action="Delete" asp-route-id="@item.ID"><i class="fa fa-times" aria-hidden="true"></i></a>
                     </td>
                 </tr>
             }

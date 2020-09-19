@@ -106,63 +106,6 @@ namespace FoodForm.Controllers
             return NotFound();
         }
 
-        //// GET: Denuncias/Edit/5
-        //[Authorize(Roles = "Moderador")]
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var denuncias = await _context.Denuncias.FindAsync(id);
-        //    if (denuncias == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", denuncias.ReceitaFK);
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", denuncias.UtilizadorFK);
-        //    return View(denuncias);
-        //}
-
-        //// POST: Denuncias/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Moderador")]
-        //public async Task<IActionResult> Edit(int id, [Bind("ID,Data,Conteudo,UtilizadorFK,ReceitaFK")] Denuncias denuncias)
-        //{
-        //    if (id != denuncias.ID)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(denuncias);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!DenunciasExists(denuncias.ID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", denuncias.ReceitaFK);
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", denuncias.UtilizadorFK);
-        //    return View(denuncias);
-        //}
-
         // GET: Denuncias/Delete/5
         [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> Delete(int? id)

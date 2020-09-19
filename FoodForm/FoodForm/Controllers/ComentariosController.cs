@@ -104,61 +104,6 @@ namespace FoodForm.Controllers
             return NotFound();
         }
 
-        //// GET: Comentarios/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var comentarios = await _context.Comentarios.FindAsync(id);
-        //    if (comentarios == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", comentarios.ReceitaFK);
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", comentarios.UtilizadorFK);
-        //    return View(comentarios);
-        //}
-
-        //// POST: Comentarios/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("ID,Data,Conteudo,UtilizadorFK,ReceitaFK")] Comentarios comentarios)
-        //{
-        //    if (id != comentarios.ID)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(comentarios);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!ComentariosExists(comentarios.ID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", comentarios.ReceitaFK);
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", comentarios.UtilizadorFK);
-        //    return View(comentarios);
-        //}
-
         // GET: Comentarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -187,6 +132,8 @@ namespace FoodForm.Controllers
             var comentario = await _context.Comentarios.FindAsync(id);
             _context.Comentarios.Remove(comentario);
             await _context.SaveChangesAsync();
+
+            //volta á pagina da receita
             return RedirectToAction("Details", "Receitas", new { Id = comentario.ReceitaFK });
         }
 

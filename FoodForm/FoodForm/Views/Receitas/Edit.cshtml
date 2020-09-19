@@ -14,13 +14,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
+                <label class="control-label">Título</label>
                 <input asp-for="Titulo" class="form-control" />
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Descricao" class="control-label"></label>
-                <textarea asp-for="Descricao" class="form-control" form="EditReceita"></textarea>
+                <label class="control-label">Descrição</label>
+                <textarea asp-for="Descricao" class="form-control" form="CreateReceita"></textarea>
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,12 +39,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Tempo" class="control-label">Tempo (em minutos)</label>
-                <input asp-for="Tempo" class="form-control" />
+                <input asp-for="Tempo" class="form-control" min="1" />
                 <span asp-validation-for="Tempo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PessoasServidas" class="control-label"></label>
-                <input asp-for="PessoasServidas" class="form-control" />
+                <label asp-for="PessoasServidas" class="control-label">Nº de pessoas servidas</label>
+                <input asp-for="PessoasServidas" class="form-control" min="1" />
                 <span asp-validation-for="PessoasServidas" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -53,7 +53,7 @@
                 <span asp-validation-for="Ingredientes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Autor" class="form-control" value="@ViewBag.Owner" hidden/>
+                <input asp-for="Autor" class="form-control" value="@ViewBag.Owner" hidden />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -63,7 +63,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-light" asp-action="Index">Voltar</a>
 </div>
 
 @section Scripts {

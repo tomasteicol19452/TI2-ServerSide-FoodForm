@@ -21,6 +21,8 @@ namespace FoodForm.Models
         /// Nome do prato ou receita descrita no post
         /// </summary>
         [Required(ErrorMessage = "Preenchimento do {0} obrigatório.")]
+        [StringLength(30, ErrorMessage = "O Titulo não pode exceder os {1} caracteres.")]
+        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ ]+")]
         public string Titulo { get; set; }
 
         /// <summary>
@@ -60,11 +62,11 @@ namespace FoodForm.Models
         /// <summary>
         /// Ingredientes base presentes na receita que o autor queira especificar
         /// </summary>
-        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ]+[;]", ErrorMessage ="Os ingredientes devem estar separados por ';'.")]
+        [RegularExpression("[A-ZÓÂÍa-zçáéíóúàèìòùãõäëïöüâêîôûñ ]+[;]", ErrorMessage ="Os ingredientes devem estar separados por ';'.")]
         public string Ingredientes { get; set; }
 
         /// <summary>
-        /// Utilizador que criou esta receita (ou versão dela) 
+        /// Utilizador que criou esta receita
         /// </summary>
         [ForeignKey(nameof(Utilizador))]
         public int Autor { get; set; }

@@ -200,23 +200,63 @@ namespace FoodForm.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Nome,Imagem")] Utilizadores utilizadores)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Nome,Imagem")] Utilizadores utilizador, IFormFile fotoUser)
         {
-            if (id != utilizadores.ID)
+            if (id != utilizador.ID)
             {
                 return NotFound();
+            }
+
+            //string que contem o caminho até a imagem
+            string caminhoCompleto = "";
+            bool haImagem = false;
+
+            //porcessar a fotografia
+            //será que há fotografia?->verificação de existencia de fotografia
+            if (fotoUser == null)
+            {
+                utilizador.Imagem = "no-user.jpg";
+            }
+            else
+            {
+                //especificação do content type
+                if (fotoUser.ContentType == "image/jpeg" || fotoUser.ContentType == "image/png")
+                {
+                    //pepara o nome unico do ficheiro para guardar no disco rigido do servido
+                    Guid g;
+                    g = Guid.NewGuid();
+                    string extensao = Path.GetExtension(fotoUser.FileName).ToLower();
+                    string nome = g.ToString() + extensao;
+                    //onde guardar o ficheiro / a sua diretoria
+                    caminhoCompleto = Path.Combine(_caminho.WebRootPath, "img\\utilizadores", nome);
+                    //assosciar o nome do ficheiro ao utilizador
+                    utilizador.Imagem = nome;
+                    //assinalar que existe imagem e é preciso guarda-la no disco
+                    haImagem = true;
+                }
+                else
+                {
+                    utilizador.Imagem = "no-user.jpg";
+                }
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(utilizadores);
+                    _context.Update(utilizador);
                     await _context.SaveChangesAsync();
+
+                    //se ha imagem, guardar no disco rigido
+                    if (haImagem)
+                    {
+                        using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+                        await fotoUser.CopyToAsync(stream);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UtilizadoresExists(utilizadores.ID))
+                    if (!UtilizadoresExists(utilizador.ID))
                     {
                         return NotFound();
                     }
@@ -227,7 +267,7 @@ namespace FoodForm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(utilizadores);
+            return View(utilizador);
         }
 
         // GET: Utilizadores/Delete/5
@@ -264,15 +304,6 @@ namespace FoodForm.Controllers
         private bool UtilizadoresExists(int id)
         {
             return _context.Utilizadores.Any(e => e.ID == id);
-        }
-
-        //
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Moderador")]
-        public async Task<IActionResult> BloquearUtilizador(int id) {
-            var utilizador = await _context.Utilizadores.FindAsync(id);
-
-            return View();
         }
     }
 }

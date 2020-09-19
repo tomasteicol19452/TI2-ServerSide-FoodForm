@@ -21,7 +21,7 @@ namespace FoodForm.Models
         public string Conteudo { get; set; }
 
         /// <summary>
-        /// Utilizador que comentou
+        /// Utilizador que denunciou
         /// </summary>
         [ForeignKey(nameof(Utilizador))]
         public int UtilizadorFK { get; set; }

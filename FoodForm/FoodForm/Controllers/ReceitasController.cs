@@ -58,14 +58,17 @@ namespace FoodForm.Controllers
                 return NotFound();
             }
             
+            //retorna o id utilizador
             Utilizadores Dono = _context.Utilizadores
                                          .Where(u => u.UserID == _userManager.GetUserId(User))
                                          .FirstOrDefault();
+            //carrega para o viewbag
             ViewBag.ID_Dono = Dono.ID;
 
+            //retorna uma o gosto feito por este utilizador a este post
             Gostos gostado = _context.Gostos
                 .Where(u => u.UtilizadorFK == Dono.ID && u.ReceitaFK == id).FirstOrDefault();
-
+            //carrega para o viewbag o estado do gosto no post
             if(gostado == null)
             {
                 ViewBag.Liked = false;
@@ -92,6 +95,7 @@ namespace FoodForm.Controllers
         // Faz o GET da Interface para apresentar
         public IActionResult Create()
         {
+            //envia o id do utilizador corrente 
             Utilizadores Dono = _context.Utilizadores
                                          .Where(u => u.UserID == _userManager.GetUserId(User))
                                          .FirstOrDefault();
@@ -166,6 +170,7 @@ namespace FoodForm.Controllers
                 return NotFound();
             }
 
+            //id do user
             Utilizadores Dono = _context.Utilizadores
                                         .Where(u => u.UserID == _userManager.GetUserId(User))
                                         .FirstOrDefault();

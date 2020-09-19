@@ -54,14 +54,6 @@ namespace FoodForm.Controllers
             return View(gostos);
         }
 
-        //// GET: Gostos/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao");
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email");
-        //    return View();
-        //}
-
         // POST: Gostos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -98,81 +90,6 @@ namespace FoodForm.Controllers
                 return RedirectToAction("Details", "Receitas", new { Id = id });
             }
         }
-
-        //// GET: Gostos/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var gostos = await _context.Gostos.FindAsync(id);
-        //    if (gostos == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", gostos.ReceitaFK);
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", gostos.UtilizadorFK);
-        //    return View(gostos);
-        //}
-
-        //// POST: Gostos/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("ID,Gosto,UtilizadorFK,ReceitaFK")] Gostos gostos)
-        //{
-        //    if (id != gostos.ID)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(gostos);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!GostosExists(gostos.ID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ReceitaFK"] = new SelectList(_context.Receitas, "ID", "Descricao", gostos.ReceitaFK);
-        //    ViewData["UtilizadorFK"] = new SelectList(_context.Utilizadores, "ID", "Email", gostos.UtilizadorFK);
-        //    return View(gostos);
-        //}
-
-        // GET: Gostos/Delete/5
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var gostos = await _context.Gostos
-        //        .Include(g => g.Receita)
-        //        .Include(g => g.Utilizador)
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (gostos == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View();
-        //}
 
         // POST: Gostos/Delete/5
         [Authorize(Roles = "Utilizador")]

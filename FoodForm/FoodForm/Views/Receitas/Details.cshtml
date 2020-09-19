@@ -15,45 +15,72 @@
             <dd class="col-sm-12">
                 <h2>@Html.DisplayFor(model => model.Titulo)</h2>
             </dd>
+            <dd class="col-sm-10">
+                <span class="icons">
+                    <i class="fa fa-signal" aria-hidden="true"></i> 
+                    @Html.DisplayFor(model => model.Dificuldade)
+                </span>
+                <span class="icons">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i> 
+                    @Html.DisplayFor(model => model.Tempo)min
+                </span>
+                <span class="icons">
+                    <i class="fa fa-users" aria-hidden="true"></i> 
+                    @Html.DisplayFor(model => model.PessoasServidas)
+                </span>
+            </dd>
+            <dd>
+                @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
+                {
+                    //botão de like que so pode ser acedido pelos utilizadores
+                    <div class="likeContainer">
+
+                        @if (ViewBag.Liked == true) //enquato tiver sido gostado apresenta o icon verde e apresenta a opção de apagar o like da base de dados
+                        {
+                            <form asp-action="Delete" asp-controller="Gostos" method="post">
+                                <input type="hidden" asp-for="ID" />
+                                <button type="submit" value="Gostei" class="btn">
+                                    <i class="fa fa-thumbs-o-up" aria-hidden="true" style="color:green"></i>
+                                    @Model.ListaDeGostos.Count Gosto(s)
+                                </button>
+                            </form>
+                        }
+                        else  //enquato não tiver sido gostado apresenta o icon verde e apresenta a opção de criar o like na base de dados
+                        {
+                            <form asp-action="Create" asp-controller="Gostos" method="post">
+                                <input type="hidden" asp-for="ID" />
+                                <button type="submit" value="Gostar" class="btn">
+                                    <i class="fa fa-thumbs-o-up" aria-hidden="true" style="color:blue"></i>
+                                    @Model.ListaDeGostos.Count Gosto(s)
+                                </button>
+                            </form>
+                        }
+                    </div>
+                }
+            </dd>
             <dd class="col-sm-12">
                 <p>@Html.DisplayFor(model => model.Descricao)</p>
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Dificuldade)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Dificuldade)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Tempo)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Tempo) min
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.PessoasServidas)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.PessoasServidas)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Ingredientes)
             </dt>
             <dd class="col-sm-10">
-                @if (Model.Ingredientes == null) //texto para o caso de não existirem
-                {
-                    <text>Nenhum ingrediente identificado </text>
+                @if(Model.Ingredientes != null){ //separa a string dos ingredientes em list items desde que haja ingredientes identificados
+                    <ul>
+                        @foreach (var ingredient in Model.Ingredientes.Split(";")){
+                            @if(ingredient != ""){
+                                <li>
+                                    @ingredient
+                                </li>
+                            }
+                        }
+                    </ul>
+                } else {
+                    <span>Nao existem ingredientes para esta receita.</span> // no caso de nao haver ingredientes identificados
                 }
-                else
-                {
-                    @Model.Ingredientes
-                }
-
             </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Utilizador)
-            </dt>
             <dd class="col-sm-10">
+                <i class="fa fa-user" aria-hidden="true"></i>
                 @Html.DisplayFor(model => model.Utilizador.Nome)
             </dd>
         </dl>
@@ -66,26 +93,29 @@
                 <hr />
                 @if (Model.ListaDeComentarios.Count == 0) //se não houver receitas associadas a esta conta ou seja o count for 0.
                 {
-                    <p>Sem Comentários. Faz of primeiro comentário!</p>
+                    <p>Sem Comentários. Faz o primeiro comentário!</p>
                 }
                 else
                 {
-                    @foreach (var item in Model.ListaDeComentarios)
-                    {
-                        <div id="comentario row">
-                            <div class="col">
-                                <h5>@Html.DisplayFor(modelItem => item.Utilizador.Nome)</h5>
-                                @Html.DisplayFor(modelItem => item.Conteudo)
-                                <br />
-                                @Html.DisplayFor(modelItem => item.Data)
-                                @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono || User.IsInRole("Moderador"))
-                                {
-                                    <div class="col">
-                                        <a asp-controller="Comentarios" asp-action="Delete" asp-route-id="@item.ID">
-                                            <span>🗑️</span>
-                                        </a>
+                    @foreach (var item in Model.ListaDeComentarios) //lista de comentarios
+                    { 
+                        //por cada comentario apresenta o nome do autor, o conteudo e quando foi escrito
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Utilizador.Nome)</h5>
+                                        <p class="card-text">@Html.DisplayFor(modelItem => item.Conteudo)</p>
+                                        <p>@Html.DisplayFor(modelItem => item.Data)</p>
+                                        @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono || User.IsInRole("Moderador"))
+                                            //permite apagar se for o dono do comentario ou o moderador
+                                        {
+                                            <a class="btn btn-danger" asp-controller="Comentarios" asp-action="Delete" asp-route-id="@item.ID">
+                                                <span>Apagar</span>
+                                            </a>
+                                        }
                                     </div>
-                                }
+                                </div>
                             </div>
                         </div>
                     }
@@ -95,34 +125,6 @@
 
     </div>
 
-    @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
-    {
-        <div class="row likeContainer">
-
-            @if (ViewBag.Liked == true)
-            {
-                <form asp-action="Delete" asp-controller="Gostos" method="post">
-                    <input type="hidden" asp-for="ID" />
-                    <input type="submit" value="Gostei" class="btn btn-success" />
-                </form>
-            }
-            else
-            {
-                <form asp-action="Create" asp-controller="Gostos" method="post">
-                    <input type="hidden" asp-for="ID" />
-                    <input type="submit" value="Gostar" class="btn btn-primary" />
-                </form>
-            }
-            @Model.ListaDeGostos.Count Gosto(s)
-        </div>
-        <div class="row">
-            <a class="btn btn-dark" asp-action="Create" asp-controller="Denuncias" asp-route-id="@Model.ID">Denunciar</a>
-        </div>
-
-    }
-
-
-
     <a class="btn btn-light" asp-action="Index">Voltar</a>
 
     @if (User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono)
@@ -131,7 +133,11 @@
     }
     @if (User.Identity.IsAuthenticated && User.IsInRole("Moderador") || User.Identity.IsAuthenticated && Model.Autor == ViewBag.ID_Dono)
     {
-    <a class="btn btn-light" asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
+        <a class="btn btn-light" asp-action="Delete" asp-route-id="@Model.ID">Apagar</a>
+    }
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("Moderador"))
+    {
+        <a class="btn btn-dark" asp-action="Create" asp-controller="Denuncias" asp-route-id="@Model.ID">Denunciar</a>
     }
 </div>
 

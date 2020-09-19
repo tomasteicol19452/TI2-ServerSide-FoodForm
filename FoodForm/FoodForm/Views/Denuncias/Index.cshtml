@@ -13,15 +13,11 @@
                 @Html.DisplayNameFor(model => model.Data)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Conteudo)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Utilizador)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Receita)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -31,14 +27,14 @@
                 @Html.DisplayFor(modelItem => item.Data)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Conteudo)
+                @Html.DisplayFor(modelItem => item.Utilizador.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Receita.Descricao)
+                @Html.DisplayFor(modelItem => item.Receita.Titulo)
             </td>
             <td>
-                <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a class="btn " asp-action="Details" asp-route-id="@item.ID"><i class="fa fa-eye" aria-hidden="true"></i></a> |
+                <a class="btn" asp-action="Delete" asp-route-id="@item.ID"><i class="fa fa-times" aria-hidden="true"></i></a>
             </td>
         </tr>
 }

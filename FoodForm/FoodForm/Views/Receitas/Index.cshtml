@@ -4,69 +4,52 @@
     ViewData["Title"] = "Receitas";
 }
 
-<h1>Receitas</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Titulo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Descricao)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Imagem)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Dificuldade)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tempo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PessoasServidas)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Ingredientes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Utilizador)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-            <tr>
-                <td>
+<style>
+.flexed {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flexed-item {
+    flex: 1 0 21%;
+    align-self: auto;
+    padding: 20px;
+    margin: 20px;
+    max-width: calc(100% * (1/4) - 10px - 1px);
+}
+.icons {
+    margin-right: 5px:
+}
+</style>
+
+<div class="flexed">
+    @foreach (var item in Model){
+        <div class="card flexed-item" style="width: 18rem;">
+            <img src="~/img/receitas/@item.Imagem" class="card-img-top"  alt="@item.Titulo" title="@item.Titulo" >
+            <div class="card-body">
+                <h5 class="card-title text-truncate">
                     @Html.DisplayFor(modelItem => item.Titulo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descricao)
-                </td>
-                <td>
-                    <img src="~/img/receitas/@item.Imagem" height="80" alt="@item.Titulo" title="@item.Titulo" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Dificuldade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tempo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PessoasServidas)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ingredientes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Utilizador.ID)
-                </td>
-                <td>
-                    <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.ID">Ver</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+                </h5>
+                <p class="card-text">
+                    <span class="icons">
+                        <i class="fa fa-signal" aria-hidden="true"></i> 
+                        @Html.DisplayFor(modelItem => item.Dificuldade)
+                    </span><br/>
+                    <span class="icons">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i> 
+                        @Html.DisplayFor(modelItem => item.Tempo)min
+                    </span><br/>
+                    <span class="icons">
+                        <i class="fa fa-users" aria-hidden="true"></i> 
+                        @Html.DisplayFor(modelItem => item.PessoasServidas)
+                    </span>
+                </p>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Ver</a>
+            </div>
+        </div>
+    }
+</div>
