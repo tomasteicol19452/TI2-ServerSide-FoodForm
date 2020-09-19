@@ -4,10 +4,13 @@
 
 <div class="text-center">
     <h1 class="display-4">Bem Vindo ao FoodForm!</h1>
+    @if (!User.IsInRole("Bloqueado"))
+    {
     <a class="btn btn-dark" asp-area="" asp-controller="Receitas" asp-action="Index">
         Todas as Receitas
     </a>
-    @if (User.Identity.IsAuthenticated)
+    }
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Utilizador"))
     {
         <a class="btn btn-dark" asp-area="" asp-controller="Receitas" asp-action="Create">
             Criar uma receita

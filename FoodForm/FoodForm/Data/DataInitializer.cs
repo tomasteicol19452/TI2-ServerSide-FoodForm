@@ -73,6 +73,14 @@ namespace FoodForm.Data
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;
             }
+
+            if (!roleManager.RoleExistsAsync("Bloqueado").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Bloqueado";
+                IdentityResult roleResult = roleManager.
+                CreateAsync(role).Result;
+            }
         }
     }
 }

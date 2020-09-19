@@ -255,8 +255,8 @@ namespace FoodForm.Controllers
         [Authorize(Roles = "Moderador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var utilizadores = await _context.Utilizadores.FindAsync(id);
-            _context.Utilizadores.Remove(utilizadores);
+            var utilizador = await _context.Utilizadores.FindAsync(id);
+            _context.Utilizadores.Remove(utilizador);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -264,6 +264,15 @@ namespace FoodForm.Controllers
         private bool UtilizadoresExists(int id)
         {
             return _context.Utilizadores.Any(e => e.ID == id);
+        }
+
+        //
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Moderador")]
+        public async Task<IActionResult> BloquearUtilizador(int id) {
+            var utilizador = await _context.Utilizadores.FindAsync(id);
+
+            return View();
         }
     }
 }

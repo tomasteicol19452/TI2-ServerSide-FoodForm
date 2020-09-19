@@ -31,7 +31,7 @@
                 @Html.DisplayFor(model => model.Tempo) min
             </dd>
             <dt class="col-sm-2">
-                Nº de Pessoas Servidas
+                @Html.DisplayNameFor(model => model.PessoasServidas)
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.PessoasServidas)
@@ -40,13 +40,13 @@
                 @Html.DisplayNameFor(model => model.Ingredientes)
             </dt>
             <dd class="col-sm-10">
-                @if (Model.Ingredientes == null)
+                @if (Model.Ingredientes == null) //texto para o caso de não existirem
                 {
                     <text>Nenhum ingrediente identificado </text>
                 }
                 else
                 {
-                    @Html.DisplayFor(model => model.Ingredientes)
+                    @Model.Ingredientes
                 }
 
             </dd>
@@ -59,13 +59,14 @@
         </dl>
         <div class="col comentariosContainer">
 
-            @if (User.Identity.IsAuthenticated)
+            @if (User.Identity.IsAuthenticated) //so pode visualizar se for autenticado
             {
-                <h2>Comentários<a class="btn btn-light" asp-controller="Comentarios" asp-action="Create" asp-route-id="@Model.ID"><span>✏️</span></a></h2>
+                //so pode ser comentado se for utilizador
+                <h2>Comentários @if (User.IsInRole("Utilizador")) {<a class="btn btn-light" asp-controller="Comentarios" asp-action="Create" asp-route-id="@Model.ID"><span>✏️</span></a>}</h2>
                 <hr />
                 @if (Model.ListaDeComentarios.Count == 0) //se não houver receitas associadas a esta conta ou seja o count for 0.
                 {
-                    <p>Sem Comentários.</p>
+                    <p>Sem Comentários. Faz of primeiro comentário!</p>
                 }
                 else
                 {
